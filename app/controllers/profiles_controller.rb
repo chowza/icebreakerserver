@@ -48,7 +48,7 @@ class ProfilesController < ApplicationController
 
 	def profile_params
 	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :answer3, :answer4, :answer5, :preferred_min_age,
-	   	:preferred_max_age, :prefers_male, :preferred_sound, :preferred_distance, :male)
+	   	:preferred_max_age, :prefers_male, :preferred_sound, :preferred_distance, :male, :picture1, :picture2, :picture3, :picture4, :picture5)
 	end
 
 end
