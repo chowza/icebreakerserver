@@ -7,35 +7,30 @@ class Profile < ActiveRecord::Base
 	has_many :messages, through: :matches
 
 	has_attached_file :picture1, styles: {
-		thumb: '100x100>',
-    	square: '200x200#',
+		  thumb: '100x100>',
     	medium: '300x300>'
-	}, url: "/pictures/:facebook_id/:style/1:dotextension",
+	}, url: "pictures/:facebook_id/:style/1:dotextension",
   path: ":rails_root/public/:url"
 
 	has_attached_file :picture2, styles: {
-		thumb: '100x100>',
-    	square: '200x200#',
+		  thumb: '100x100>',
     	medium: '300x300>'
-	}, url: "/pictures/:facebook_id/:style/2:dotextension",
+	}, url: "pictures/:facebook_id/:style/2:dotextension",
   path: ":rails_root/public/:url"
 	has_attached_file :picture3, styles: {
-		thumb: '100x100>',
-    	square: '200x200#',
+		  thumb: '100x100>',
     	medium: '300x300>'
-	}, url: "/pictures/:facebook_id/:style/3:dotextension",
+	}, url: "pictures/:facebook_id/:style/3:dotextension",
   path: ":rails_root/public/:url"
 	has_attached_file :picture4, styles: {
-		thumb: '100x100>',
-    	square: '200x200#',
+		  thumb: '100x100>',
     	medium: '300x300>'
-	}, url: "/pictures/:facebook_id/:style/4:dotextension",
+	}, url: "pictures/:facebook_id/:style/4:dotextension",
   path: ":rails_root/public/:url"
 	has_attached_file :picture5, styles: {
-		thumb: '100x100>',
-    	square: '200x200#',
+		  thumb: '100x100>',
     	medium: '300x300>'
-	}, url: "/pictures/:facebook_id/:style/5:dotextension",
+	}, url: "pictures/:facebook_id/:style/5:dotextension",
   path: ":rails_root/public/:url"
 	
 	   #Validate the attached image is image/jpg, image/png, etc
