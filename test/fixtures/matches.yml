@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  swipee_id: 1
+  likes: false
+  match: false
+  swiper_name: MyString
+  swipee_name: MyString
+
+two:
+  swipee_id: 1
+  likes: false
+  match: false
+  swiper_name: MyString
+  swipee_name: MyString
