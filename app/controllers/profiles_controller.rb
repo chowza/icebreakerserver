@@ -33,9 +33,23 @@ class ProfilesController < ApplicationController
 	def update
 		#PUT/PATCH path to profiles/:id
 
-		puts params
-		
 		@profile = Profile.find_by_facebook_id(params[:id])
+		if picture1_url?
+			@profile.picture1_from_url(params[:picture1_url])
+		end
+		if picture2_url?
+			@profile.picture2_from_url(params[:picture2_url])
+		end
+		if picture3_url?
+			@profile.picture3_from_url(params[:picture2_url])
+		end
+		if picture4_url?
+			@profile.picture4_from_url(params[:picture2_url])
+		end
+		if picture5_url?
+			@profile.picture5_from_url(params[:picture2_url])
+		end
+
 		if @profile.update(profile_params)
 			render json: @profile
 		else

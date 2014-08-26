@@ -1,4 +1,5 @@
 class Profile < ActiveRecord::Base
+
 	validates :preferred_min_age, :numericality => { :greater_than => 18, :less_than_or_equal_to => :preferred_max_age }
 	validates :preferred_max_age, :numericality => { :greater_than => 18, :greater_than_or_equal_to => :preferred_min_age }
   validates :facebook_id, uniqueness: true
@@ -32,7 +33,7 @@ class Profile < ActiveRecord::Base
     	medium: '300x300>'
 	}
 	
-	#Validate the attached image is image/jpg, image/png, etc
+	   #Validate the attached image is image/jpg, image/png, etc
     validates_attachment_content_type :picture1, :content_type => /\Aimage\/.*\Z/
     validates_attachment_content_type :picture2, :content_type => /\Aimage\/.*\Z/
     validates_attachment_content_type :picture3, :content_type => /\Aimage\/.*\Z/
@@ -46,43 +47,43 @@ class Profile < ActiveRecord::Base
 
 
     def picture1_from_url(url)
-      if url.blank?
-        self.picture1 = nil
-      else
         self.picture1 = URI.parse(url)
-      end
   	end
 
   	def picture2_from_url(url)
-      if url.blank?
-        self.picture2 = nil
-      else
 	      self.picture2 = URI.parse(url)
-      end
   	end
 
   	def picture3_from_url(url)
-      if url.blank?
-        self.picture3 = nil
-      else
 	      self.picture3 = URI.parse(url)
-      end
   	end
 
   	def picture4_from_url(url)
-      if url.blank?
-        self.picture1 = nil
-      else
 	      self.picture4 = URI.parse(url)
-      end
   	end
 
   	def picture5_from_url(url)
-      if url.blank?
-        self.picture1 = nil
-      else
 	      self.picture5 = URI.parse(url)
-      end
   	end
+
+    def picture1_url?
+      !self.picture1_url.blank?
+    end
+
+    def picture2_url?
+      !self.picture2_url.blank?
+    end
+
+    def picture3_url?
+      !self.picture3_url.blank?
+    end
+
+    def picture4_url?
+      !self.picture4_url.blank?
+    end
+    
+    def picture5_url?
+      !self.picture5_url.blank?
+    end
 
 end
