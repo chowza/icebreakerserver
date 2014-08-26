@@ -18,6 +18,13 @@ gem 'aws-sdk'
 
 gem 'paperclip'
 
+platforms :ruby do 
+# linux   
+	gem 'unicorn' 
+end  
+platforms :mswin do
+
+end
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'
 
