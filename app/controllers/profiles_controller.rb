@@ -10,6 +10,7 @@ class ProfilesController < ApplicationController
 	end
 
 	def create
+		
 		#POST path to profiles
 		@profile = Profile.new(profile_params)
 		if @profile.save

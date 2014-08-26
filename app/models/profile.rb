@@ -46,23 +46,43 @@ class Profile < ActiveRecord::Base
 
 
     def picture1_from_url(url)
-	    self.picture1 = URI.parse(url) unless url.blank?
+      if url.blank?
+        self.picture1 = nil
+      else
+        self.picture1 = URI.parse(url)
+      end
   	end
 
   	def picture2_from_url(url)
-	    self.picture2 = URI.parse(url) unless url.blank?
+      if url.blank?
+        self.picture2 = nil
+      else
+	      self.picture2 = URI.parse(url)
+      end
   	end
 
   	def picture3_from_url(url)
-	    self.picture3 = URI.parse(url) unless url.blank?
+      if url.blank?
+        self.picture3 = nil
+      else
+	      self.picture3 = URI.parse(url)
+      end
   	end
 
   	def picture4_from_url(url)
-	    self.picture4 = URI.parse(url) unless url.blank?
+      if url.blank?
+        self.picture1 = nil
+      else
+	      self.picture4 = URI.parse(url)
+      end
   	end
 
   	def picture5_from_url(url)
-	    self.picture5 = URI.parse(url) unless url.blank?
+      if url.blank?
+        self.picture1 = nil
+      else
+	      self.picture5 = URI.parse(url)
+      end
   	end
 
 end
