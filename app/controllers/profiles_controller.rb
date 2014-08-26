@@ -34,7 +34,23 @@ class ProfilesController < ApplicationController
 		#PUT/PATCH path to profiles/:id
 
 		@profile = Profile.find_by_facebook_id(params[:id])
-		
+
+		if picture1_url?
+			@profile.picture1_from_url(params[:picture1_url])
+		end
+		if picture2_url?
+			@profile.picture2_from_url(params[:picture2_url])
+		end
+		if picture3_url?
+			@profile.picture3_from_url(params[:picture3_url])
+		end
+		if picture4_url?
+			@profile.picture4_from_url(params[:picture4_url])
+		end
+		if picture5_url?
+			@profile.picture5_from_url(params[:picture5_url])
+		end
+
 		if @profile.update(profile_params)
 			render json: @profile
 		else
@@ -52,6 +68,26 @@ class ProfilesController < ApplicationController
 	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :answer3, :answer4, :answer5, :preferred_min_age,
 	   	:preferred_max_age, :prefers_male, :preferred_sound, :preferred_distance, :male, :picture1, :picture2, :picture3, :picture4, :picture5, 
 	   	:picture1_from_url, :picture2_from_url, :picture3_from_url, :picture4_from_url, :picture5_from_url)
+	end
+
+	def picture1_url?
+		!params[:picture1_url].blank?
+	end
+
+	def picture2_url?
+		!params[:picture2_url].blank?
+	end
+
+	def picture3_url?
+		!params[:picture3_url].blank?
+	end
+
+	def picture4_url?
+		!params[:picture4_url].blank?
+	end
+
+	def picture5_url?
+		!params[:picture5_url].blank?
 	end
 
 end
