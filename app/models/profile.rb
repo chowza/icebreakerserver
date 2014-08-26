@@ -1,5 +1,9 @@
 class Profile < ActiveRecord::Base
-
+  before_validation :picture1_from_url, :if => :picture1_url?
+  before_validation :picture2_from_url, :if => :picture2_url?
+  before_validation :picture3_from_url, :if => :picture3_url?
+  before_validation :picture4_from_url, :if => :picture4_url?
+  before_validation :picture5_from_url, :if => :picture5_url?
 	validates :preferred_min_age, :numericality => { :greater_than => 18, :less_than_or_equal_to => :preferred_max_age }
 	validates :preferred_max_age, :numericality => { :greater_than => 18, :greater_than_or_equal_to => :preferred_min_age }
   validates :facebook_id, uniqueness: true
@@ -81,7 +85,7 @@ class Profile < ActiveRecord::Base
     def picture4_url?
       !self.picture4_url.blank?
     end
-    
+
     def picture5_url?
       !self.picture5_url.blank?
     end
