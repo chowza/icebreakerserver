@@ -10,7 +10,7 @@ class ProfilesController < ApplicationController
 	end
 
 	def create
-		
+
 		#POST path to profiles
 		@profile = Profile.new(profile_params)
 		if @profile.save
@@ -32,6 +32,8 @@ class ProfilesController < ApplicationController
 	
 	def update
 		#PUT/PATCH path to profiles/:id
+
+		puts params
 		
 		@profile = Profile.find_by_facebook_id(params[:id])
 		if @profile.update(profile_params)
@@ -49,7 +51,8 @@ class ProfilesController < ApplicationController
 
 	def profile_params
 	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :answer3, :answer4, :answer5, :preferred_min_age,
-	   	:preferred_max_age, :prefers_male, :preferred_sound, :preferred_distance, :male, :picture1, :picture2, :picture3, :picture4, :picture5)
+	   	:preferred_max_age, :prefers_male, :preferred_sound, :preferred_distance, :male, :picture1, :picture2, :picture3, :picture4, :picture5, 
+	   	:picture1_from_url, :picture2_from_url, :picture3_from_url, :picture4_from_url, :picture5_from_url)
 	end
 
 end
