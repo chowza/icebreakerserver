@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140826181704) do
+ActiveRecord::Schema.define(version: 20140827000600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,7 +53,6 @@ ActiveRecord::Schema.define(version: 20140826181704) do
     t.integer  "answer5"
     t.integer  "preferred_min_age"
     t.integer  "preferred_max_age"
-    t.boolean  "prefers_male"
     t.boolean  "preferred_sound"
     t.integer  "preferred_distance"
     t.string   "image1"
@@ -88,6 +87,7 @@ ActiveRecord::Schema.define(version: 20140826181704) do
     t.string   "picture5_content_type"
     t.integer  "picture5_file_size"
     t.datetime "picture5_updated_at"
+    t.string   "preferred_gender"
   end
 
 end
