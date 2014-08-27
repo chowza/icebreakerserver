@@ -44,20 +44,21 @@ class ProfilesController < ApplicationController
 
 		@profile = Profile.find_by_facebook_id(params[:id])
 
+
 		if picture1_url?
-			@profile.picture1_from_url(params[:picture1_url])
+			@profile.picture1_from_url(params[:profile][:picture1_url])
 		end
 		if picture2_url?
-			@profile.picture2_from_url(params[:picture2_url])
+			@profile.picture2_from_url(params[:profile][:picture2_url])
 		end
 		if picture3_url?
-			@profile.picture3_from_url(params[:picture3_url])
+			@profile.picture3_from_url(params[:profile][:picture3_url])
 		end
 		if picture4_url?
-			@profile.picture4_from_url(params[:picture4_url])
+			@profile.picture4_from_url(params[:profile][:picture4_url])
 		end
 		if picture5_url?
-			@profile.picture5_from_url(params[:picture5_url])
+			@profile.picture5_from_url(params[:profile][:picture5_url])
 		end
 
 		if @profile.update(profile_params)
@@ -79,23 +80,23 @@ class ProfilesController < ApplicationController
 	end
 
 	def picture1_url?
-		!params[:picture1_url].blank?
+		!params[:profile][:picture1_url].blank?
 	end
 
 	def picture2_url?
-		!params[:picture2_url].blank?
+		!params[:profile][:picture2_url].blank?
 	end
 
 	def picture3_url?
-		!params[:picture3_url].blank?
+		!params[:profile][:picture3_url].blank?
 	end
 
 	def picture4_url?
-		!params[:picture4_url].blank?
+		!params[:profile][:picture4_url].blank?
 	end
 
 	def picture5_url?
-		!params[:picture5_url].blank?
+		!params[:profile][:picture5_url].blank?
 	end
 
 end
