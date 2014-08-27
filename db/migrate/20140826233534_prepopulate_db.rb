@@ -18,9 +18,6 @@ class PrepopulateDb < ActiveRecord::Migration
   	Match.create(profile_id:5, match:false, swipee_id:5)
   	Match.create(profile_id:5, match:true, swipee_id:6)
   	Match.create(profile_id:5, match:false, swipee_id:7)
-  	# Match.create(profile_id:5, match:true, swipee_id:8)
-  	# Match.create(profile_id:5, match:true, swipee_id:9)
-  	# Match.create(profile_id:5, match:true, swipee_id:10)
 
 
   end
