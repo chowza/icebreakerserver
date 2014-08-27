@@ -4,7 +4,7 @@ class Profile < ActiveRecord::Base
   validates :facebook_id, uniqueness: true
 
 	has_many :matches
-	has_many :messages, through: :matches
+	has_many :messages
 
 	has_attached_file :picture1, styles: {
 		  thumb: '100x100>',
