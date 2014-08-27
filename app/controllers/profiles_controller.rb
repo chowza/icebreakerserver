@@ -22,6 +22,12 @@ class ProfilesController < ApplicationController
 
 		#POST path to profiles - used to create a new user (TODO write some code to prevent someone creating two profiles on a double click)
 		@profile = Profile.new(profile_params)
+		@profile.picture1 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/iconlight.jpg')
+		@profile.picture2 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
+		@profile.picture3 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
+		@profile.picture4 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
+		@profile.picture5 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
+		
 		if @profile.save
 			render json: @profile
 		else
