@@ -29,15 +29,15 @@ class ProfilesController < ApplicationController
 		end
 	end
 
-	# def show
-	# 	#GET path to profiles/:id - used to show details of user
-	# 	@profile = Profile.find_by_facebook_id(params[:id])
-	# 	if !@profile.nil?
-	# 		render json: @profile
-	# 	else
-	# 		render :text => '', :content_type => 'text/plain'
-	# 	end
-	# end
+	def show
+		#GET path to profiles/:id - used to show details of user
+		@profile = Profile.find_by_facebook_id(params[:id])
+		if !@profile.nil?
+			render json: @profile
+		else
+			render :text => '', :content_type => 'text/plain'
+		end
+	end
 	
 	def update
 		#PUT/PATCH path to profiles/:id - used to update details of user
