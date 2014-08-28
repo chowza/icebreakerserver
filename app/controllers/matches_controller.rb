@@ -17,10 +17,10 @@ class MatchesController < ApplicationController
   		#POST call to matches - used to add a new like or dislike
       @match = Match.new(match_params)
       if @match.save
-        if params[:likes]
+        if params[:match][:likes]
           # TODO
           #since you liked, check if you were liked back and send a notification and save that a match was made
-          @recipient = Match.find_by_profile_id(params[:swipee_id])
+          @recipient = Match.find_by_profile_id(params[:match][:swipee_id])
           if @recipient['likes']
             # 2 likes, send match message
             
