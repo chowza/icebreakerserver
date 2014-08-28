@@ -29,8 +29,8 @@ class MatchesController < ApplicationController
             @test = Profile.find_by_facebook_id(10100675664421760) # this used for testing purposes
             gcm.send_notification({registration_ids:[@test['client_identification_sequence']],data:{message:"testing",msgcnt:"1",otherdetail:"hekki"}})
 
-            # save that both matched
-            if @match.update({match:true}) && @recipient.update({match:true})
+            # save that both matched and also save recipient facebook ids
+            if @match.update({match:true, recipient_facebook_id: @recipient.profile.facebook_id }) && @recipient.update({match:true, recipient_facebook_id: @match.profile.facebook_id})
               render :text => '', :content_type => 'text/plain'
             else
               #error saving match??
@@ -49,7 +49,7 @@ class MatchesController < ApplicationController
   	end
 
   def match_params
-      params.require(:match).permit(:swipee_id, :likes, :match,:swipee_name,:profile_id)
+      params.require(:match).permit(:swipee_id, :likes, :match,:swipee_name,:profile_id,:recipient_facebook_id)
   end
 
 end
