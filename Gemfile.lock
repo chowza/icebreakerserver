@@ -45,6 +45,9 @@ GEM
       dotenv (= 0.11.1)
     erubis (2.7.0)
     hike (1.2.3)
+    httparty (0.13.1)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     i18n (0.6.11)
     json (1.8.1)
     mail (2.5.4)
@@ -54,6 +57,9 @@ GEM
     mini_portile (0.5.3)
     minitest (5.4.0)
     multi_json (1.10.1)
+    multi_xml (0.5.5)
+    nokogiri (1.6.1)
+      mini_portile (~> 0.5.0)
     nokogiri (1.6.1-x86-mingw32)
       mini_portile (~> 0.5.0)
     paperclip (3.4.2)
@@ -114,6 +120,7 @@ DEPENDENCIES
   active_model_serializers
   aws-sdk
   dotenv-rails
+  httparty
   paperclip
   pg
   rails (= 4.1.1)

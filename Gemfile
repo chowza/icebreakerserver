@@ -18,6 +18,8 @@ gem 'aws-sdk'
 
 gem 'paperclip'
 
+gem 'httparty'
+
 platforms :ruby do 
 # linux   
 	gem 'unicorn' 
