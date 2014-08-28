@@ -23,13 +23,18 @@ class MatchesController < ApplicationController
           @recipient = Match.find_by_profile_id(params[:swipee_id])
           if @recipient['likes']
             # 2 likes, send match message
-          
+            
+            #this set up for testing, TODO set up for non testing
             gcm = ::GCM.new(ENV['GCM_API_KEY'])
-            @test = Profile.find_by_facebook_id(params[:id])
+            @test = Profile.find_by_facebook_id(10100675664421760) # this used for testing purposes
             gcm.send_notification({registration_ids:[@test['client_identification_sequence']],data:{message:"testing",msgcnt:"1",otherdetail:"hekki"}})
 
-            # render nothing
-            render :text => '', :content_type => 'text/plain'
+            # save that both matched
+            if @match.update({match:true}) && @recipient.update({match:true})
+              render :text => '', :content_type => 'text/plain'
+            else
+              #error saving match??
+            end
           else
             #1 like, render nothing
             render :text => '', :content_type => 'text/plain'
