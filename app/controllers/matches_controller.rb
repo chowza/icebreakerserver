@@ -21,26 +21,31 @@ class MatchesController < ApplicationController
           # TODO
           #since you liked, check if you were liked back and send a notification and save that a match was made
           @recipient = Match.find_by_profile_id(params[:match][:swipee_id])
-          if @recipient.nil? && @recipient['likes']
-            # 2 likes, send match message
-            
-            #this set up for testing, TODO set up for non testing
-            gcm = ::GCM.new(ENV['GCM_API_KEY'])
-            @test = Profile.find_by_facebook_id(10100675664421760) # this used for testing purposes
-            gcm.send_notification({registration_ids:[@test['client_identification_sequence']],data:{message:"testing",msgcnt:"1",otherdetail:"hekki"}})
+          if !@recipient.nil?
+            if @recipient['likes']
+              # 2 likes, send match message
+              
+              #this set up for testing, TODO set up for non testing
+              gcm = ::GCM.new(ENV['GCM_API_KEY'])
+              @test = Profile.find_by_facebook_id(10100675664421760) # this used for testing purposes
+              gcm.send_notification({registration_ids:[@test['client_identification_sequence']],data:{message:"testing",msgcnt:"1",otherdetail:"hekki"}})
 
-            # save that both matched and also save recipient facebook ids
-            if @match.update({match:true, recipient_facebook_id: @recipient.profile.facebook_id }) && @recipient.update({match:true, recipient_facebook_id: @match.profile.facebook_id})
-              render :text => '', :content_type => 'text/plain'
+              # save that both matched and also save recipient facebook ids
+              if @match.update({match:true, recipient_facebook_id: @recipient.profile.facebook_id }) && @recipient.update({match:true, recipient_facebook_id: @match.profile.facebook_id})
+                render :text => '', :content_type => 'text/plain'
+              else
+                #error saving match??
+              end
             else
-              #error saving match??
+              #1 like, render nothing
+              render :text => '', :content_type => 'text/plain'
             end
           else
-            #1 like, render nothing
+            #recipient has never swiped on you, therefore no need to update that a match has happened
             render :text => '', :content_type => 'text/plain'
           end
         else
-          #since you didn't like, continue 
+          #since you didn't like, therefore no need to update that a match has happened
           render :text => '', :content_type => 'text/plain'
         end
       else
