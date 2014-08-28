@@ -11,7 +11,7 @@ class MatchesController < ApplicationController
   		#GET call to matches/:id - used to show an individual's matches
       gcm = ::GCM.new(ENV['GCM_API_KEY'])
       @test = Profile.find_by_facebook_id(params[:id])
-      gcm.send_notification({registration_ids:[@test['client_identification_sequence']],data:{message:"testing",sent_by:"sent by me"}})
+      gcm.send_notification({registration_ids:[@test['client_identification_sequence']],data:{message:"testing",msgcnt:"1",otherdetail:"hekki"}})
   		@matches = Profile.find_by_facebook_id(params[:id]).matches.where("match = ?",true)
   		render json: @matches
   	end
