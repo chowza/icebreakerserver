@@ -2,7 +2,7 @@ class MessagesController < ApplicationController
 	require 'gcm'
 	before_filter :cors_preflight_check
   	after_filter :cors_set_access_control_headers
-  	
+
 	def show
 		@profile = Profile.find_by_facebook_id(params[:id])
 		@messages = Message.where("recipient_id = ? AND profile_id = ? OR recipient_id = ? AND profile_id = ?", @profile['id'],params[:recipient_id],params[:recipient_id],@profile['id']).order(:created_at)
@@ -15,9 +15,9 @@ class MessagesController < ApplicationController
 		if @message.save
 			# send message
 			@recipient = Profile.find(@message['recipient_id'])
-			if @recipient.profile.push_type == 'gcm'
+			if @recipient.push_type == 'gcm'
 				gcm = GCM.new(ENV['GCM_API_KEY'])
-				gcm.send([@recipient.profile.client_identification_sequence],data:{message:"You have a new message!",msgcnt:"1",sender_id:@message.profile_id})
+				gcm.send([@recipient.client_identification_sequence],data:{message:"You have a new message!",msgcnt:"1",sender_id:@message.profile_id})
 			elsif @recipient_id.profile.push_type == 'apns'
 				#TODO initialize Apple
 			elsif @recipient_id.profile.push_type == 'mpns'
