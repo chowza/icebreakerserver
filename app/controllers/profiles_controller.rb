@@ -10,8 +10,8 @@ class ProfilesController < ApplicationController
 		@user = Profile.find_by_facebook_id(params[:facebook_id])
 		#get what you've already swiped on
 		@already_swiped = Match.where("profile_id = ?", @user['id']).pluck(:swipee_id)
-		unless params[:skip].nil?
-			@already_swiped.push(params[:skip])
+		unless params[:skip_ids].nil?
+			@already_swiped = (@already_swiped + JSON.parse(params[:skip_ids])).uniq
 		end
 
 		if @already_swiped.empty?
