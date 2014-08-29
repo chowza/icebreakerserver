@@ -1,8 +1,5 @@
 class MatchesController < ApplicationController
     require 'gcm'
-    # gcm = ::GCM.new(api_key)
-    # gcm.send_notification({registration_ids: ["4sdsx", "8sdsd"], data: {score: "5x1"}})
-    
 	  before_filter :cors_preflight_check
   	after_filter :cors_set_access_control_headers
 
