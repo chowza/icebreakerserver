@@ -12,13 +12,19 @@ class MessagesController < ApplicationController
 		@message = Message.new(message_params)
 		
 		if @message.save
-
-            gcm = ::GCM.new(ENV['GCM_API_KEY'])
-#            @recipient = Profile.find(params[:recipient_id])
-			@recipient = Profile.find_by_facebook_id(10100675664421760) # this used for testing purposes
-            gcm.send_notification({registration_ids:[@recipient['client_identification_sequence']],data:{message:params[:message][:content],msgcnt:"1",sender_name:params[:message][:sender_name],sender_facebook_id:params[:message][:sender_facebook_id]}})
-
-			render json: @profile
+			# send message
+			@recipient = Profile.find(@message['recipient_id'])
+			if @recipient.profile.push_type == 'gcm'
+				gcm = GCM.new(ENV['GCM_API_KEY'])
+				gcm.send([@recipient.profile.client_identification_sequence],data:{message:"You have a new message!",msgcnt:"1",sender_id:@message.profile_id})
+			elsif @recipient_id.profile.push_type == 'apns'
+				#TODO initialize Apple
+			elsif @recipient_id.profile.push_type == 'mpns'
+				#TODO initialize Windows
+			elsif @recipient_id.profile.push_type == 'adm'
+				#TODO intialize amazon
+			end
+			render json: @message
 		else
 			render 'failed to save'
 		end

@@ -23,14 +23,45 @@ class MatchesController < ApplicationController
           @recipient = Match.find_by_profile_id(params[:match][:swipee_id])
           if !@recipient.nil?
             if @recipient['likes']
-              # 2 likes, send match message
-              
-              #this set up for testing, TODO set up for non testing
-              gcm = ::GCM.new(ENV['GCM_API_KEY']) #in development you can use .env, in production you need to add this key to the configs on heroku
-              @test = Profile.find(37) # this used for testing purposes
-              gcm.send_notification({registration_ids:[@test['client_identification_sequence']],data:{message:"testing",msgcnt:"1",otherdetail:"hekki"}})
+              # 2 likes, send match messages and then save that match = true
 
-              # save that both matched and also save recipient facebook ids
+              # initialize...
+              if @match.profile.push_type == 'gcm' || @recipient.profile.push_type =='gcm'
+                gcm = GCM.new(ENV['GCM_API_KEY'])
+              elsif @match.profile.push_type == 'apns' || @recipient.profile.push_type =='apns'
+                #TODO initialize Apple
+              elsif @match.profile.push_type == 'mpns' || @recipient.profile.push_type =='mpns'
+                #TODO initialize Windows
+              elsif @match.profile.push_type == 'adm' || @recipient.profile.push_type =='adm'
+                #TODO intialize amazon
+              end
+                
+              # notification to sender
+              if @match.profile.push_type == 'gcm'
+                gcm.send([@match.profile.client_identification_sequence],data:{message:"You have a new match!",msgcnt:"1"})
+              elsif @match.profile.push_type == 'apns'
+                #TODO send apple device
+              elsif @match.profile.push_type == 'mpns'
+                #TODO send window device elsif @match.profile.push_type == 'adm'
+                # send to amazon phone
+              else
+                #not supported
+              end
+
+              #notification to recipient
+              if @recipient.profile.push_type == 'gcm'
+                gcm.send([@recipient.profile.client_identification_sequence],data:{message:"You have a new match!",msgcnt:"1"})
+              elsif @recipient.profile.push_type == 'apns'
+                #TODO send apple device
+              elsif @recipient.profile.push_type == 'mpns'
+                #TODO send window device
+              elsif @recipient.profile.push_type == 'adm'
+                # send to amazon phone
+              else
+                #not supported
+              end
+
+              # save both matched = true and also save recipient facebook ids
               if @match.update({match:true, recipient_facebook_id: @recipient.profile.facebook_id }) && @recipient.update({match:true, recipient_facebook_id: @match.profile.facebook_id})
                 render :text => '', :content_type => 'text/plain'
               else
