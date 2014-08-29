@@ -4,7 +4,7 @@ class MessagesController < ApplicationController
   	# gcm.send_notification({registration_ids: ["4sdsx", "8sdsd"], data: {score: "5x1"}})
 	def show
 		@profile = Profile.find_by_facebook_id(params[:id])
-		@messages = Message.where("recipient_id = ? AND profile_id = ?", [@profile['id'],params[:recipient_id].to_i],[@profile['id'],params[:recipient_id].to_i]).order(:created_at)
+		@messages = Message.where("recipient_id = ? AND profile_id = ? OR recipient_id = ? AND profile_id = ?", @profile['id'],params[:recipient_id],params[:recipient_id],@profile['id']).order(:created_at)
 		render json: @messages
 	end
 
