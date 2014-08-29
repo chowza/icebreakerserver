@@ -20,6 +20,8 @@ gem 'paperclip'
 
 gem 'httparty'
 
+gem 'gcm'
+
 platforms :ruby do 
 # linux   
 	gem 'unicorn' 

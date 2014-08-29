@@ -26,8 +26,8 @@ class MatchesController < ApplicationController
               # 2 likes, send match message
               
               #this set up for testing, TODO set up for non testing
-              gcm = ::GCM.new(ENV['GCM_API_KEY'])
-              @test = Profile.find_by_facebook_id(10100675664421760) # this used for testing purposes
+              gcm = ::GCM.new(ENV['GCM_API_KEY']) #in development you can use .env, in production you need to add this key to the configs on heroku
+              @test = Profile.find(37) # this used for testing purposes
               gcm.send_notification({registration_ids:[@test['client_identification_sequence']],data:{message:"testing",msgcnt:"1",otherdetail:"hekki"}})
 
               # save that both matched and also save recipient facebook ids
