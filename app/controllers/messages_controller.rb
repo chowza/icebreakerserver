@@ -12,7 +12,7 @@ class MessagesController < ApplicationController
 	def create
 		@message = Message.new(message_params)
 		
-		@first_message_time = Message.where("recipient_id = ? AND profile_id = ? OR recipient_id = ? AND profile_id = ?", @profile['id'],params[:recipient_id],params[:recipient_id],@profile['id']).order(:created_at).limit(1).pluck(:created_at)[0]
+		@first_message_time = Message.where("recipient_id = ? AND profile_id = ? OR recipient_id = ? AND profile_id = ?", @message.profile_id,@message.recipient_id,@message.recipient_id,@message.profile_id).order(:created_at).limit(1).pluck(:created_at)[0]
 
 		if @first_message_time.nil?
 			content = "You have 24 hours to talk to " + @message.profile_id + ". Have fun!"
