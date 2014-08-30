@@ -33,9 +33,12 @@ class MatchesController < ApplicationController
                 #TODO intialize amazon
               end
                 
+              # in GCM, use notId to signify different notifications. Notifications with the same notId will replace each other whereas different notIds will create new messages.
+              # We use the same notId because if someone gets 10 or 1 notification, they are still going to the same matches page.
+
               # notification to sender
               if @match.profile.push_type == 'gcm'
-                gcm.send([@match.profile.client_identification_sequence],data:{message:"You have a new match!",msgcnt:"1"})
+                gcm.send([@match.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@recipient.profile.first_name+"!",title:"You have a new match",notId:"1"})
               elsif @match.profile.push_type == 'apns'
                 #TODO send apple device
               elsif @match.profile.push_type == 'mpns'
@@ -47,7 +50,7 @@ class MatchesController < ApplicationController
 
               #notification to recipient
               if @recipient.profile.push_type == 'gcm'
-                gcm.send([@recipient.profile.client_identification_sequence],data:{message:"You have a new match!",msgcnt:"1"})
+                gcm.send([@match.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@match.profile.first_name+"!",title:"You have a new match",notId:"1"})
               elsif @recipient.profile.push_type == 'apns'
                 #TODO send apple device
               elsif @recipient.profile.push_type == 'mpns'
