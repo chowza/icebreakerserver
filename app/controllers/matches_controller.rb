@@ -19,7 +19,7 @@ class MatchesController < ApplicationController
           #since you liked, check if you were liked back and send a notification and save that a match was made
           @recipient = Match.where("profile_id = ? and swipee_id = ?",params[:match][:swipee_id],params[:match][:profile_id])
           if @recipient.exists?
-            if @recipient['likes']
+            if @recipient[0]['likes']
               # 2 likes, send match messages and then save that match = true
 
               # initialize...
