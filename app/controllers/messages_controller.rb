@@ -15,13 +15,13 @@ class MessagesController < ApplicationController
 		@first_message_time = Message.where("recipient_id = ? AND profile_id = ? OR recipient_id = ? AND profile_id = ?", @message.profile_id,@message.recipient_id,@message.recipient_id,@message.profile_id).order(:created_at).limit(1).pluck(:created_at)[0]
 
 		if @first_message_time.nil?
-			content = "You have 24 hours to talk to " + @message.profile_id + ". Have fun!"
+			content = "You have 24 hours to talk to " + @message.profile_id.to_s + ". Have fun!"
 		else
 			@timeLeft = ((@first_message_time+24.hours-Time.now)/3600).round
 			if @timeLeft > 5
-				content = "You have about " + @timeLeft + "hours to talk."
+				content = "You have about " + @timeLeft.to_s + "hours to talk."
 			elsif @timeLeft > 1
-				content = "You only have " + @timeLeft + "hours left to talk!"
+				content = "You only have " + @timeLeft.to_s + "hours left to talk!"
 			else 
 				content = "You have less than an hour before you lose the chance to talk to " + @message.sender_name+" forever!"
 			end
