@@ -16,6 +16,11 @@ class MessagesController < ApplicationController
 
 		if @first_message_time.nil?
 			content = "You have 24 hours to talk to " + @message.profile_id.to_s + ". Have fun!"
+			@sender = Match.find_by_profile_id(@message.profile_id)
+			@recip = Match.find_by_profile_id(@message.recipient_id)
+			@now = Time.now
+			@sender.update(first_message_time: @now)
+			@recip.update(first_message_time: @now)
 		else
 			@timeLeft = ((@first_message_time+24.hours-Time.now)/3600).round
 			if @timeLeft > 5
