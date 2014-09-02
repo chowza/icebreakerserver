@@ -25,9 +25,9 @@ class MessagesController < ApplicationController
 		else
 			@timeLeft = ((@first_message_time+24.hours-Time.now)/3600).round
 			if @timeLeft > 5
-				content = "You have about " + @timeLeft.to_s + "hours to talk."
+				content = "You have about " + @timeLeft.to_s + " hours to talk."
 			elsif @timeLeft > 1
-				content = "You only have " + @timeLeft.to_s + "hours left to talk!"
+				content = "You only have " + @timeLeft.to_s + " hours left to talk!"
 			else 
 				content = "You have less than an hour before you lose the chance to talk to " + @message.sender_name+" forever!"
 			end
@@ -40,7 +40,7 @@ class MessagesController < ApplicationController
 				@recipient = Profile.find(@message.recipient_id)
 				if @recipient.push_type == 'gcm'
 					gcm = GCM.new(ENV['GCM_API_KEY'])
-					gcm.send([@recipient.client_identification_sequence],data:{message:content, notId:@message.profile_id,title:"You have a new message from" + @message.profile.first_name+"."})
+					gcm.send([@recipient.client_identification_sequence],data:{message:content, notId:@message.profile_id, title:"You have a new message from " + @message.profile.first_name+".", sender_name:@message.sender_name,message_content:@message.content,sender_facebook_id:@message.sender_facebook_id})
 				elsif @recipient.push_type == 'apns'
 					#TODO initialize Apple
 				elsif @recipient.push_type == 'mpns'
