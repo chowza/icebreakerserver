@@ -52,7 +52,6 @@ class MessagesController < ApplicationController
 		else
 			render 'failed to save'
 		end
-
 	end
 
 	def message_params
