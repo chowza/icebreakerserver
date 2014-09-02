@@ -21,6 +21,7 @@ class MessagesController < ApplicationController
 			@now = Time.now
 			@sender.update(first_message_time: @now)
 			@recip.update(first_message_time: @now)
+			@timeLeft = 24
 		else
 			@timeLeft = ((@first_message_time+24.hours-Time.now)/3600).round
 			if @timeLeft > 5
@@ -33,7 +34,7 @@ class MessagesController < ApplicationController
 		end
 
 		if @message.save
-			if @timeLeft <0
+			if @timeLeft <=0
 			else
 				# send message
 				@recipient = Profile.find(@message.recipient_id)
