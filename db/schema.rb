@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20140903054111) do
     t.integer  "profile_id"
     t.integer  "recipient_facebook_id", limit: 8
     t.datetime "first_message_time"
-    t.integer  "match_type"
+    t.string   "match_type"
   end
 
   add_index "matches", ["profile_id"], name: "index_matches_on_profile_id", using: :btree
