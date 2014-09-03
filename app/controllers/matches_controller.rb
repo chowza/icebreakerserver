@@ -84,6 +84,103 @@ class MatchesController < ApplicationController
       end
   	end
 
+    def update
+      @match = Match.find_by_profile_id(params[:id])
+      @recipient = Match.where("profile_id = ? and swipee_id = ?",@match.swipee_id,@match.profile_id)[0]
+
+      if @recipient.match_type.nil?
+
+        if @match.update(match_params)
+          if @match.match_type == "waiting_for_other_meet"
+            type = "Meet Now"
+          elsif @match.match_type == "waiting_for_other_chat"
+            type = "Chat-for-24"
+          else
+            type = "have an in App Call"
+          end
+
+          #notify recipient what match_type was chosen by the user
+        
+          if @recipient.profile.push_type == 'gcm'
+            gcm.send([@match.profile.client_identification_sequence],data:{message: @match.profile.first_name + " would like to " + type + "!",title:"Your match has made a selection.",notId:"1",swipee_id:@match.profile.id,match_type:@match.match_type})
+          elsif @recipient.profile.push_type == 'apns'
+            #TODO send apple device
+          elsif @recipient.profile.push_type == 'mpns'
+            #TODO send window device
+          elsif @recipient.profile.push_type == 'adm'
+            # send to amazon phone
+          else
+            #not supported
+          end
+          render :text => "Recipient not chosen yet", :content_type => 'text/plain'
+        else
+          #handle error
+        end
+      elsif @recipient.match_type == params[:matches][:match_type]
+        if @match.match_type == "waiting_for_other_meet"
+          type = "Meet Now"
+          @match.match_type = "agreed_to_meet"
+          @match.update({match_type:"agreed_to_meet"}) && @recipient.update({match_type:"agreed_to_meet"})
+        elsif @match.match_type == "waiting_for_other_chat"
+          type = "Chat-for-24"
+          @match.match_type = "agreed_to_chat"
+          @match.update({match_type:"agreed_to_chat"}) && @recipient.update({match_type:"agreed_to_chat"})
+        else
+          type = "have an in App Call"
+        end
+        #notify recipient what match_type was chosen by the user
+      
+        if @recipient.profile.push_type == 'gcm'
+          gcm.send([@match.profile.client_identification_sequence],
+            data:{message: @match.profile.first_name + " has agreed to " + type + "!",
+              title:"Your match has made a selection.",
+              notId:"1",
+              swipee_id:@match.profile.id,
+              match_type:@match.match_type})
+        elsif @recipient.profile.push_type == 'apns'
+          #TODO send apple device
+        elsif @recipient.profile.push_type == 'mpns'
+          #TODO send window device
+        elsif @recipient.profile.push_type == 'adm'
+          # send to amazon phone
+        else
+          #not supported
+        end
+        render :text => "Same", :content_type => 'text/plain'
+      
+      elsif @recipient.match_type == "waiting_for_other_chat" && @match.match_type == "waiting_for_other_meet"
+        @match.update(match_params)
+        render :text => "Different sender to change", :content_type => 'text/plain'
+      
+      elsif @recipient.match_type == "waiting_for_other_meet" && @match.match_type == "waiting_for_other_chat"
+        if @match.update(match_params)
+          type = "Chat-for-24"
+          #notify recipient what match_type was chosen by the user
+          if @recipient.profile.push_type == 'gcm'
+            gcm.send([@match.profile.client_identification_sequence],
+              data:{message: @match.profile.first_name + " has chosen " + type + "!",
+                title:"Your match has made a selection.",
+                notId:"1",
+                swipee_id:@match.profile.id,
+                match_type:@match.match_type})
+          elsif @recipient.profile.push_type == 'apns'
+            #TODO send apple device
+          elsif @recipient.profile.push_type == 'mpns'
+            #TODO send window device
+          elsif @recipient.profile.push_type == 'adm'
+            # send to amazon phone
+          else
+            #not supported
+          end
+          render :text => "Different receiver to change", :content_type => 'text/plain'
+        else
+          #handle error
+        end
+      else
+        # handle more when adding in app call  
+      end
+    end
+
   def match_params
       params.require(:match).permit(:swipee_id, :likes, :match,:swipee_name,:profile_id,:recipient_facebook_id)
   end

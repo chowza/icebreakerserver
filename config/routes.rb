@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   match 'profiles/:id', to: 'profiles#update', via: [:put, :options]
   match 'profiles', to: 'profiles#create', via: [:post,:options]
   match 'matches', to: 'matches#create', via: [:post,:options]
+  match 'matches/:id', to: 'matches#update', via: [:put, :options]
   match 'messages', to: 'messages#create', via: [:post,:options]
   resources :messages, except: [:new, :edit]
   resources :matches, except: [:new, :edit]
