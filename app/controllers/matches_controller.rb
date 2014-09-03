@@ -118,11 +118,11 @@ class MatchesController < ApplicationController
           #handle error
         end
       elsif @recipient.match_type == params[:match][:match_type]
-        if @match.match_type == "waiting_for_other_meet"
+        if params[:match][:match_type] == "waiting_for_other_meet"
           type = "Meet Now"
           @match.match_type = "agreed_to_meet"
           @match.update({match_type:"agreed_to_meet"}) && @recipient.update({match_type:"agreed_to_meet"})
-        elsif @match.match_type == "waiting_for_other_chat"
+        elsif params[:match][:match_type] == "waiting_for_other_chat"
           type = "Chat-for-24"
           @match.match_type = "agreed_to_chat"
           @match.update({match_type:"agreed_to_chat"}) && @recipient.update({match_type:"agreed_to_chat"})
@@ -150,11 +150,11 @@ class MatchesController < ApplicationController
         end
         render :text => "Same", :content_type => 'text/plain'
       
-      elsif @recipient.match_type == "waiting_for_other_chat" && @match.match_type == "waiting_for_other_meet"
+      elsif @recipient.match_type == "waiting_for_other_chat" && params[:match][:match_type]== "waiting_for_other_meet"
         @match.update(match_params)
         render :text => "Different sender to change", :content_type => 'text/plain'
       
-      elsif @recipient.match_type == "waiting_for_other_meet" && @match.match_type == "waiting_for_other_chat"
+      elsif @recipient.match_type == "waiting_for_other_meet" && params[:match][:match_type] == "waiting_for_other_chat"
         if @match.update(match_params)
           type = "Chat-for-24"
           #notify recipient what match_type was chosen by the user
