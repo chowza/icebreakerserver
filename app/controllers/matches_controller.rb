@@ -85,7 +85,7 @@ class MatchesController < ApplicationController
   	end
 
     def update
-      @match = Match.find_by_profile_id(params[:id])
+      @match = Match.where("profile_id = ? and swipee_id = ?",params[:id],params[:matches][:swipee_id])[0]
       @recipient = Match.where("profile_id = ? and swipee_id = ?",@match.swipee_id,@match.profile_id)[0]
 
       if @recipient.match_type.nil?
