@@ -40,7 +40,13 @@ class MessagesController < ApplicationController
 				@recipient = Profile.find(@message.recipient_id)
 				if @recipient.push_type == 'gcm'
 					gcm = GCM.new(ENV['GCM_API_KEY'])
-					gcm.send([@recipient.client_identification_sequence],data:{message:content, notId:@message.profile_id, title:"You have a new message from " + @message.profile.first_name+".", sender_name:@message.sender_name,message_content:@message.content,sender_facebook_id:@message.sender_facebook_id})
+					gcm.send([@recipient.client_identification_sequence],
+						data:{message:content, 
+							notId:@message.profile_id, 
+							title:"You have a new message from " + @message.profile.first_name+".", 
+							sender_name:@message.sender_name,
+							message_content:@message.content,
+							sender_facebook_id:@message.sender_facebook_id})
 				elsif @recipient.push_type == 'apns'
 					#TODO initialize Apple
 				elsif @recipient.push_type == 'mpns'

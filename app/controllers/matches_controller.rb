@@ -38,7 +38,7 @@ class MatchesController < ApplicationController
 
               # notification to sender
               if @match.profile.push_type == 'gcm'
-                gcm.send([@match.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@recipient.profile.first_name+"!",title:"You have a new match",notId:"1"})
+                gcm.send([@match.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@recipient.profile.first_name+"!",title:"You have a new match",notId:"1",swipee_id:@recipient.profile.id,swipee_name:@recipient.profile.first_name,recipient_facebook_id:@recipient.profile.facebook_id})
               elsif @match.profile.push_type == 'apns'
                 #TODO send apple device
               elsif @match.profile.push_type == 'mpns'
@@ -50,7 +50,7 @@ class MatchesController < ApplicationController
 
               #notification to recipient
               if @recipient.profile.push_type == 'gcm'
-                gcm.send([@match.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@match.profile.first_name+"!",title:"You have a new match",notId:"1"})
+                gcm.send([@match.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@match.profile.first_name+"!",title:"You have a new match",notId:"1",swipee_id:@match.profile.id,swipee_name:@match.profile.first_name,recipient_facebook_id:@match.profile.facebook_id})
               elsif @recipient.profile.push_type == 'apns'
                 #TODO send apple device
               elsif @recipient.profile.push_type == 'mpns'
