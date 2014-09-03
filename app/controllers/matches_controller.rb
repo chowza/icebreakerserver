@@ -103,7 +103,7 @@ class MatchesController < ApplicationController
         
           if @recipient.profile.push_type == 'gcm'
             gcm = GCM.new(ENV['GCM_API_KEY'])
-            gcm.send([@match.profile.client_identification_sequence],data:{message: @match.profile.first_name + " would like to " + type + "!",title:"Your match has made a selection.",notId:"1",swipee_id:@match.profile.id,match_type:@match.match_type})
+            gcm.send([@recipient.profile.client_identification_sequence],data:{message: @match.profile.first_name + " would like to " + type + "!",title:"Your match has made a selection.",notId:"1",swipee_id:@match.profile.id,match_type:@match.match_type})
           elsif @recipient.profile.push_type == 'apns'
             #TODO send apple device
           elsif @recipient.profile.push_type == 'mpns'
@@ -133,7 +133,7 @@ class MatchesController < ApplicationController
       
         if @recipient.profile.push_type == 'gcm'
           gcm = GCM.new(ENV['GCM_API_KEY'])
-          gcm.send([@match.profile.client_identification_sequence],
+          gcm.send([@recipient.profile.client_identification_sequence],
             data:{message: @match.profile.first_name + " has agreed to " + type + "!",
               title:"Your match has made a selection.",
               notId:"1",
@@ -160,7 +160,7 @@ class MatchesController < ApplicationController
           #notify recipient what match_type was chosen by the user
           if @recipient.profile.push_type == 'gcm'
             gcm = GCM.new(ENV['GCM_API_KEY'])
-            gcm.send([@match.profile.client_identification_sequence],
+            gcm.send([@recipient.profile.client_identification_sequence],
               data:{message: @match.profile.first_name + " has chosen " + type + "!",
                 title:"Your match has made a selection.",
                 notId:"1",
