@@ -182,7 +182,7 @@ class MatchesController < ApplicationController
     end
 
   def match_params
-      params.require(:match).permit(:swipee_id, :likes, :match,:swipee_name,:profile_id,:recipient_facebook_id)
+      params.require(:match).permit(:swipee_id, :likes, :match,:swipee_name,:profile_id,:recipient_facebook_id,:match_type)
   end
 
 end
