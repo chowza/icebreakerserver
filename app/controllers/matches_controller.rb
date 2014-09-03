@@ -85,7 +85,7 @@ class MatchesController < ApplicationController
   	end
 
     def update
-      @match = Match.where("profile_id = ? and swipee_id = ?",params[:id],params[:matches][:swipee_id])[0]
+      @match = Match.where("profile_id = ? and swipee_id = ?",params[:id],params[:match][:swipee_id])[0]
       @recipient = Match.where("profile_id = ? and swipee_id = ?",@match.swipee_id,@match.profile_id)[0]
 
       if @recipient.match_type.nil?
@@ -116,7 +116,7 @@ class MatchesController < ApplicationController
         else
           #handle error
         end
-      elsif @recipient.match_type == params[:matches][:match_type]
+      elsif @recipient.match_type == params[:match][:match_type]
         if @match.match_type == "waiting_for_other_meet"
           type = "Meet Now"
           @match.match_type = "agreed_to_meet"
