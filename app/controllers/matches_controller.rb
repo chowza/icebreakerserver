@@ -7,6 +7,7 @@ class MatchesController < ApplicationController
   	def show
   		#GET call to matches/:id - used to show an individual's matches
       @matches = Profile.find_by_facebook_id(params[:id]).matches.where("match = ?",true)
+      
   		render json: @matches
   	end
 
@@ -14,16 +15,10 @@ class MatchesController < ApplicationController
   		#POST call to matches - used to add a new like or dislike
       @match = Match.new(match_params)
       if @match.save
-        puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-        puts "Successful save"
-        puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
         if params[:match][:likes]
           
           #since you liked, check if you were liked back and send a notification and save that a match was made
           @recipient = Match.where("profile_id = ? and swipee_id = ?",params[:match][:swipee_id],params[:match][:profile_id])[0]
-          puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-          puts @recipient
-          puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
           if !@recipient.nil?
             if @recipient['likes']
               # 2 likes, send match messages and then save that match = true
@@ -44,9 +39,6 @@ class MatchesController < ApplicationController
 
               # notification to sender
               if @match.profile.push_type == 'gcm'
-                puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-                puts "pushing to sender"
-                puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
                 gcm.send([@match.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@recipient.profile.first_name+"!",title:"You have a new match",notId:"1",swipee_id:@recipient.profile_id,swipee_name:@recipient.profile.first_name,recipient_facebook_id:@recipient.profile.facebook_id})
               elsif @match.profile.push_type == 'apns'
                 #TODO send apple device
@@ -59,9 +51,6 @@ class MatchesController < ApplicationController
 
               #notification to recipient
               if @recipient.profile.push_type == 'gcm'
-                puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-                puts "pushing to recipient"
-                puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
                 gcm.send([@recipient.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@match.profile.first_name+"!",title:"You have a new match",notId:"1",swipee_id:@match.profile_id,swipee_name:@match.profile.first_name,recipient_facebook_id:@match.profile.facebook_id})
               elsif @recipient.profile.push_type == 'apns'
                 #TODO send apple device
@@ -75,9 +64,6 @@ class MatchesController < ApplicationController
 
               # save both matched = true and also save recipient facebook ids
               if @match.update({match:true, recipient_facebook_id: @recipient.profile.facebook_id }) && @recipient.update({match:true, recipient_facebook_id: @match.profile.facebook_id})
-                puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-                puts "match updated"
-                puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
                 render :text => '', :content_type => 'text/plain'
               else
                 #error saving match??
@@ -102,24 +88,14 @@ class MatchesController < ApplicationController
     def update
       @match = Match.where("profile_id = ? and swipee_id = ?",params[:id],params[:match][:swipee_id])[0]
       @recipient = Match.where("profile_id = ? and swipee_id = ?",@match.swipee_id,@match.profile_id)[0]
-      puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-      puts @match.to_json
-      puts @recipient.to_json
-      puts params
-      puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
       if @recipient.match_type.nil?
-        puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-        puts "recipient match type nil"
-        puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
         if @match.update(match_params)
-            puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-            puts "succesful update"
-            puts @match.to_json
-            puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
           if @match.match_type == "waiting_for_other_meet"
             type = "Meet Now"
+            @recipient.update({match_type:'highlight_meet'})
           elsif @match.match_type == "waiting_for_other_chat"
             type = "Chat-for-24"
+            @recipient.update({match_type:'highlight_chat'})
           else
             type = "have an in App Call"
           end
@@ -127,9 +103,6 @@ class MatchesController < ApplicationController
           #notify recipient what match_type was chosen by the user
         
           if @recipient.profile.push_type == 'gcm'
-            puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-            puts "sending to recipient"
-            puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
             gcm = GCM.new(ENV['GCM_API_KEY'])
             gcm.send([@recipient.profile.client_identification_sequence],data:{message: @match.profile.first_name + " would like to " + type + "!",title:"Your match has made a selection.",notId:"1",swipee_id:@match.profile_id,match_type:@match.match_type})
           elsif @recipient.profile.push_type == 'apns'
@@ -179,11 +152,11 @@ class MatchesController < ApplicationController
         render :text => "Same", :content_type => 'text/plain'
       
       elsif @recipient.match_type == "waiting_for_other_chat" && params[:match][:match_type]== "waiting_for_other_meet"
-        @match.update(match_params)
+        @match.update({match_type:"change_cause_chose_different"})
         render :text => "Different sender to change", :content_type => 'text/plain'
       
       elsif @recipient.match_type == "waiting_for_other_meet" && params[:match][:match_type] == "waiting_for_other_chat"
-        if @match.update(match_params)
+        if @match.update(match_params) && @recipient.update({match_type:"change_cause_chose_different"})
           type = "Chat-for-24"
           #notify recipient what match_type was chosen by the user
           if @recipient.profile.push_type == 'gcm'
