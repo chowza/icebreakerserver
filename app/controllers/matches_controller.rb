@@ -47,7 +47,7 @@ class MatchesController < ApplicationController
                 puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
                 puts "pushing to sender"
                 puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-                gcm.send([@match.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@recipient.profile.first_name+"!",title:"You have a new match",notId:"1",swipee_id:@recipient.profile.id,swipee_name:@recipient.profile.first_name,recipient_facebook_id:@recipient.profile.facebook_id})
+                gcm.send([@match.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@recipient.profile.first_name+"!",title:"You have a new match",notId:"1",swipee_id:@recipient.profile_id,swipee_name:@recipient.profile.first_name,recipient_facebook_id:@recipient.profile.facebook_id})
               elsif @match.profile.push_type == 'apns'
                 #TODO send apple device
               elsif @match.profile.push_type == 'mpns'
@@ -62,7 +62,7 @@ class MatchesController < ApplicationController
                 puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
                 puts "pushing to recipient"
                 puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-                gcm.send([@recipient.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@match.profile.first_name+"!",title:"You have a new match",notId:"1",swipee_id:@match.profile.id,swipee_name:@match.profile.first_name,recipient_facebook_id:@match.profile.facebook_id})
+                gcm.send([@recipient.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@match.profile.first_name+"!",title:"You have a new match",notId:"1",swipee_id:@match.profile_id,swipee_name:@match.profile.first_name,recipient_facebook_id:@match.profile.facebook_id})
               elsif @recipient.profile.push_type == 'apns'
                 #TODO send apple device
               elsif @recipient.profile.push_type == 'mpns'
@@ -103,13 +103,19 @@ class MatchesController < ApplicationController
       @match = Match.where("profile_id = ? and swipee_id = ?",params[:id],params[:match][:swipee_id])[0]
       @recipient = Match.where("profile_id = ? and swipee_id = ?",@match.swipee_id,@match.profile_id)[0]
       puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
-      puts @match
-      puts @recipient
+      puts @match.to_json
+      puts @recipient.to_json
       puts params
       puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
       if @recipient.match_type.nil?
-
+        puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+        puts "recipient match type nil"
+        puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
         if @match.update(match_params)
+            puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+            puts "succesful update"
+            puts @match.to_json
+            puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
           if @match.match_type == "waiting_for_other_meet"
             type = "Meet Now"
           elsif @match.match_type == "waiting_for_other_chat"
@@ -121,8 +127,11 @@ class MatchesController < ApplicationController
           #notify recipient what match_type was chosen by the user
         
           if @recipient.profile.push_type == 'gcm'
+            puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+            puts "sending to recipient"
+            puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
             gcm = GCM.new(ENV['GCM_API_KEY'])
-            gcm.send([@recipient.profile.client_identification_sequence],data:{message: @match.profile.first_name + " would like to " + type + "!",title:"Your match has made a selection.",notId:"1",swipee_id:@match.profile.id,match_type:@match.match_type})
+            gcm.send([@recipient.profile.client_identification_sequence],data:{message: @match.profile.first_name + " would like to " + type + "!",title:"Your match has made a selection.",notId:"1",swipee_id:@match.profile_id,match_type:@match.match_type})
           elsif @recipient.profile.push_type == 'apns'
             #TODO send apple device
           elsif @recipient.profile.push_type == 'mpns'
@@ -156,7 +165,7 @@ class MatchesController < ApplicationController
             data:{message: @match.profile.first_name + " has agreed to " + type + "!",
               title:"Your match has made a selection.",
               notId:"1",
-              swipee_id:@match.profile.id,
+              swipee_id:@match.profile_id,
               match_type:@match.match_type})
         elsif @recipient.profile.push_type == 'apns'
           #TODO send apple device
@@ -183,7 +192,7 @@ class MatchesController < ApplicationController
               data:{message: @match.profile.first_name + " has chosen " + type + "!",
                 title:"Your match has made a selection.",
                 notId:"1",
-                swipee_id:@match.profile.id,
+                swipee_id:@match.profile_id,
                 match_type:@match.match_type})
           elsif @recipient.profile.push_type == 'apns'
             #TODO send apple device
