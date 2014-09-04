@@ -14,10 +14,16 @@ class MatchesController < ApplicationController
   		#POST call to matches - used to add a new like or dislike
       @match = Match.new(match_params)
       if @match.save
+        puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+        puts "Successful save"
+        puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
         if params[:match][:likes]
-          # TODO
+          
           #since you liked, check if you were liked back and send a notification and save that a match was made
           @recipient = Match.where("profile_id = ? and swipee_id = ?",params[:match][:swipee_id],params[:match][:profile_id])[0]
+          puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+          puts @recipient
+          puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
           if !@recipient.nil?
             if @recipient['likes']
               # 2 likes, send match messages and then save that match = true
@@ -38,6 +44,9 @@ class MatchesController < ApplicationController
 
               # notification to sender
               if @match.profile.push_type == 'gcm'
+                puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+                puts "pushing to sender"
+                puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
                 gcm.send([@match.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@recipient.profile.first_name+"!",title:"You have a new match",notId:"1",swipee_id:@recipient.profile.id,swipee_name:@recipient.profile.first_name,recipient_facebook_id:@recipient.profile.facebook_id})
               elsif @match.profile.push_type == 'apns'
                 #TODO send apple device
@@ -50,6 +59,9 @@ class MatchesController < ApplicationController
 
               #notification to recipient
               if @recipient.profile.push_type == 'gcm'
+                puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+                puts "pushing to recipient"
+                puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
                 gcm.send([@recipient.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@match.profile.first_name+"!",title:"You have a new match",notId:"1",swipee_id:@match.profile.id,swipee_name:@match.profile.first_name,recipient_facebook_id:@match.profile.facebook_id})
               elsif @recipient.profile.push_type == 'apns'
                 #TODO send apple device
@@ -63,6 +75,9 @@ class MatchesController < ApplicationController
 
               # save both matched = true and also save recipient facebook ids
               if @match.update({match:true, recipient_facebook_id: @recipient.profile.facebook_id }) && @recipient.update({match:true, recipient_facebook_id: @match.profile.facebook_id})
+                puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+                puts "match updated"
+                puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
                 render :text => '', :content_type => 'text/plain'
               else
                 #error saving match??
@@ -87,7 +102,11 @@ class MatchesController < ApplicationController
     def update
       @match = Match.where("profile_id = ? and swipee_id = ?",params[:id],params[:match][:swipee_id])[0]
       @recipient = Match.where("profile_id = ? and swipee_id = ?",@match.swipee_id,@match.profile_id)[0]
-
+      puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+      puts @match
+      puts @recipient
+      puts params
+      puts "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
       if @recipient.match_type.nil?
 
         if @match.update(match_params)
