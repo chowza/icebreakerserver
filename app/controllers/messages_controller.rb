@@ -6,35 +6,33 @@ class MessagesController < ApplicationController
 	def show
 		@profile = Profile.find_by_facebook_id(params[:id])
 		@messages = Message.where("recipient_id = ? AND profile_id = ? OR recipient_id = ? AND profile_id = ?", @profile['id'],params[:recipient_id],params[:recipient_id],@profile['id']).order(:created_at)
+
+		@match_time = Match.where("recipient_id = ? AND profile_id = ? OR recipient_id = ? AND profile_id = ?", @message.profile_id,@message.recipient_id,@message.recipient_id,@message.profile_id).limit(1).pluck(:match_time)[0]
 		render json: @messages
 	end
 
 	def create
 		@message = Message.new(message_params)
-		
-		@first_message_time = Message.where("recipient_id = ? AND profile_id = ? OR recipient_id = ? AND profile_id = ?", @message.profile_id,@message.recipient_id,@message.recipient_id,@message.profile_id).order(:created_at).limit(1).pluck(:created_at)[0]
 
-		if @first_message_time.nil?
-			content = "You have 24 hours to talk to " + @message.profile_id.to_s + ". Have fun!"
-			@sender = Match.find_by_profile_id(@message.profile_id)
-			@recip = Match.find_by_profile_id(@message.recipient_id)
-			@now = Time.now
-			@sender.update(first_message_time: @now)
-			@recip.update(first_message_time: @now)
+		@match_time = Match.where("recipient_id = ? AND profile_id = ? OR recipient_id = ? AND profile_id = ?", @message.profile_id,@message.recipient_id,@message.recipient_id,@message.profile_id).limit(1).pluck(:match_time)[0]
+
+		if @match_time.nil?
+			content = "You have 24 hours to talk to " + @message.sender_name + ". Have fun!"
 			@timeLeft = 24
 		else
-			@timeLeft = ((@first_message_time+24.hours-Time.now)/3600).round
-			if @timeLeft > 5
+			#calculating time left in hours
+			@timeLeft = ((@match_time+24.hours-Time.now)/3600).round 
+
+			if @timeLeft > 1
 				content = "You have about " + @timeLeft.to_s + " hours to talk."
-			elsif @timeLeft > 1
-				content = "You only have " + @timeLeft.to_s + " hours left to talk!"
 			else 
-				content = "You have less than an hour before you lose the chance to talk to " + @message.sender_name+" forever!"
+				content = "You're running out of time to talk to " + @message.sender_name+" forever!"
 			end
 		end
 
 		if @message.save
 			if @timeLeft <=0
+				#they sent a message after time expired, don't do anything...
 			else
 				# send message
 				@recipient = Profile.find(@message.recipient_id)
