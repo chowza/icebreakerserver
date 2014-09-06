@@ -6,7 +6,7 @@ class MessagesController < ApplicationController
 	def show
 		@profile = Profile.find_by_facebook_id(params[:id])
 		@messages = Message.where("recipient_id = ? AND profile_id = ? OR recipient_id = ? AND profile_id = ?", @profile['id'],params[:recipient_id],params[:recipient_id],@profile['id']).order(:created_at)
-		@match_time = Match.where("recipient_id = ? AND profile_id = ? OR recipient_id = ? AND profile_id = ?", @profile['id'],params[:recipient_id],params[:recipient_id],@profile['id']).limit(1).pluck(:match_time)
+		@match_time = Match.where("swipee_id = ? AND profile_id = ? OR swipee_id = ? AND profile_id = ?", @profile['id'],params[:recipient_id],params[:recipient_id],@profile['id']).limit(1).pluck(:match_time)
 		render json: @messages + @match_time
 	end
 
