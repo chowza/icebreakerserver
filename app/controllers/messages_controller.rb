@@ -13,7 +13,7 @@ class MessagesController < ApplicationController
 	def create
 		@message = Message.new(message_params)
 
-		@match_time = Match.where("recipient_id = ? AND profile_id = ? OR recipient_id = ? AND profile_id = ?", @message.profile_id,@message.recipient_id,@message.recipient_id,@message.profile_id).limit(1).pluck(:match_time)[0]
+		@match_time = @match_time = Match.where("swipee_id = ? AND profile_id = ? OR swipee_id = ? AND profile_id = ?", @profile['id'],params[:recipient_id],params[:recipient_id],@profile['id']).limit(1).pluck(:match_time)[0]
 
 		if @match_time.nil?
 			content = "You have 24 hours to talk to " + @message.sender_name + ". Have fun!"
