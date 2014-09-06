@@ -6,14 +6,14 @@ class MessagesController < ApplicationController
 	def show
 		@profile = Profile.find_by_facebook_id(params[:id])
 		@messages = Message.where("recipient_id = ? AND profile_id = ? OR recipient_id = ? AND profile_id = ?", @profile['id'],params[:recipient_id],params[:recipient_id],@profile['id']).order(:created_at)
-		@match_time = Match.where("profile_id = ? AND swipee_id = ?", @profile['id'],params[:recipient_id]).pluck(:match_time)[0]
+		@match_time = Match.where("profile_id = ? AND swipee_id = ?", @profile['id'],params[:recipient_id]).pluck(:match_time)
 		render json: @messages + @match_time
 	end
 
 	def create
 		@message = Message.new(message_params)
 
-		@match_time = Match.where("swipee_id = ? AND profile_id = ?", @message.profile_id,@message.recipient_id).pluck(:match_time)[0]
+		@match_time = Match.where("profile_id = ? AND swipee_id = ?", @message.profile_id,@message.recipient_id).pluck(:match_time)[0]
 
 		if @match_time.nil?
 			content = "You have 24 hours to talk to " + @message.sender_name + ". Have fun!"
