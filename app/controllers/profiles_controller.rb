@@ -54,7 +54,6 @@ class ProfilesController < ApplicationController
 
 		@profile = Profile.find_by_facebook_id(params[:id])
 
-
 		if picture1_url?
 			@profile.picture1_from_url(params[:profile][:picture1_url])
 		end
@@ -86,7 +85,8 @@ class ProfilesController < ApplicationController
 
 	def profile_params
 	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :answer3, :answer4, :answer5, :preferred_min_age,
-	   	:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender, :picture1, :picture2, :picture3, :picture4, :picture5,:client_identification_sequence,:push_type)
+	   	:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender, :picture1, :picture2, :picture3, :picture4, :picture5,
+	   	:client_identification_sequence,:push_type,:today_before_five,:today_after_five,:tomorrow_before_five,:tomorrow_after_five,:updated_availability)
 	end
 
 	def picture1_url?
