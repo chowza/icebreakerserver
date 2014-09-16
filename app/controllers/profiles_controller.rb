@@ -15,10 +15,26 @@ class ProfilesController < ApplicationController
 		end
 
 		
+		if @user.today_before_five.nil?
+			@user.today_before_five = Time.now - 60*60*24*365*100 #arbitrarily choose a time 100 years ago. nothing should match this
+		end
+
+		if @user.today_after_five.nil?
+			@user.today_after_five = Time.now - 60*60*24*365*100 #arbitrarily choose a time 100 years ago. nothing should match this
+		end
+
+		if @user.tomorrow_before_five.nil?
+			@user.tomorrow_before_five = Time.now - 60*60*24*365*100 #arbitrarily choose a time 100 years ago. nothing should match this
+		end
+
+		if @user.tomorrow_after_five.nil?
+			@user.tomorrow_after_five = Time.now - 60*60*24*365*100 #arbitrarily choose a time 100 years ago. nothing should match this
+		end
+
 		if @already_swiped.empty?
-			@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.today_before_five IN (?) OR p.today_after_five IN (?) OR p.tomorrow_before_five IN (?) OR p.tomorrow_after_five IN (?) AND p.today_before_five IS NOT NULL AND p.today_after_five IS NOT NULL AND p.tomorrow_before_five IS NOT NULL AND p.tomorrow_after_five IS NOT NULL AND p.id != ? LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],[@user.today_before_five,@user.tomorrow_before_five],[@user.today_after_five,@user.tomorrow_after_five],[@user.today_before_five,@user.tomorrow_before_five],[@user.today_after_five,@user.tomorrow_after_five],@user['id']]
+			@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.today_before_five IN (?) OR p.today_after_five IN (?) OR p.tomorrow_before_five IN (?) OR p.tomorrow_after_five IN (?) AND p.id != ? LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],[@user.today_before_five,@user.tomorrow_before_five],[@user.today_after_five,@user.tomorrow_after_five],[@user.today_before_five,@user.tomorrow_before_five],[@user.today_after_five,@user.tomorrow_after_five],@user['id']]
 		else
-			@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.today_before_five IN (?) OR p.today_after_five IN (?) OR p.tomorrow_before_five IN (?) OR p.tomorrow_after_five IN (?) AND p.today_before_five IS NOT NULL AND p.today_after_five IS NOT NULL AND p.tomorrow_before_five IS NOT NULL AND p.tomorrow_after_five IS NOT NULL AND p.id != ? AND p.id NOT IN (?) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],[@user.today_before_five,@user.tomorrow_before_five],[@user.today_after_five,@user.tomorrow_after_five],[@user.today_before_five,@user.tomorrow_before_five],[@user.today_after_five,@user.tomorrow_after_five],@user['id'],@already_swiped]
+			@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.today_before_five IN (?) OR p.today_after_five IN (?) OR p.tomorrow_before_five IN (?) OR p.tomorrow_after_five IN (?) AND p.id != ? AND p.id NOT IN (?) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],[@user.today_before_five,@user.tomorrow_before_five],[@user.today_after_five,@user.tomorrow_after_five],[@user.today_before_five,@user.tomorrow_before_five],[@user.today_after_five,@user.tomorrow_after_five],@user['id'],@already_swiped]
 		end			
 
 		# if @already_swiped.empty?
