@@ -16,16 +16,24 @@ class ProfilesController < ApplicationController
 
 
 
-		@matching_availability_updated_today = Profile.find_by_sql ["SELECT * FROM profiles p WHERE date_trunc('day',p.updated_availability)=current_date AND ((p.today_before_five = ? AND p.today_before_five IS NOT NULL) OR (p.today_after_five = ? AND p.today_after_five IS NOT NULL) OR (p.tomorrow_before_five = ? AND p.tomorrow_before_five IS NOT NULL) OR (p.tomorrow_after_five = ? AND p.tomorrow_after_five IS NOT NULL))",@user.today_before_five,@user.today_after_five,@user.tomorrow_before_five,@user.tomorrow_after_five]
+		@matching_availability_updated_today = Profile.where("date_trunc('day',updated_availability)=current_date AND ((today_before_five = ? AND today_before_five IS NOT FALSE) OR (today_after_five = ? AND today_after_five IS NOT FALSE) OR (tomorrow_before_five = ? AND tomorrow_before_five IS NOT FALSE) OR (tomorrow_after_five = ? AND tomorrow_after_five IS NOT FALSE))",@user.today_before_five,@user.today_after_five,@user.tomorrow_before_five,@user.tomorrow_after_five).pluck(:id)
 
-		@matching_availability_updated_yesterday = Profile.find_by_sql ["SELECT * FROM profiles p WHERE date_trunc('day',p.updated_availability)=(current_date-1) AND ((p.tomorrow_before_five = ? AND p.tomorrow_before_five IS NOT NULL) OR (p.tomorrow_after_five = ? AND p.tomorrow_after_five IS NOT NULL))",@user.today_before_five,@user.today_after_five]
+		@matching_availability_updated_yesterday = Profile.where("date_trunc('day',updated_availability)=(current_date-1) AND ((tomorrow_before_five = ? AND tomorrow_before_five IS NOT FALSE) OR (tomorrow_after_five = ? AND tomorrow_after_five IS NOT FALSE))",@user.today_before_five,@user.today_after_five).pluck(:id)
 
 		@matching_availability = @matching_availability_updated_yesterday + @matching_availability_updated_today
 
 		if @already_swiped.empty?
-			@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id']]
+			if @matching_availability.empty?
+				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id']]
+			else
+				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id in (?) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@matching_availability]
+			end
 		else
-			@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id NOT IN (?) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@already_swiped]
+			if @matching_availability.empty?
+				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id NOT IN (?) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@already_swiped]
+			else
+				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id NOT IN (?) AND p.id IN (?) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@already_swiped,@matching_availability]
+			end
 		end			
 
 		# if @already_swiped.empty?
