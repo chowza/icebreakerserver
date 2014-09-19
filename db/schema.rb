@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140903054111) do
+ActiveRecord::Schema.define(version: 20140919150239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,8 +27,7 @@ ActiveRecord::Schema.define(version: 20140903054111) do
     t.datetime "updated_at"
     t.integer  "profile_id"
     t.integer  "recipient_facebook_id", limit: 8
-    t.datetime "first_message_time"
-    t.string   "match_type"
+    t.datetime "match_time"
   end
 
   add_index "matches", ["profile_id"], name: "index_matches_on_profile_id", using: :btree
@@ -86,6 +85,13 @@ ActiveRecord::Schema.define(version: 20140903054111) do
     t.datetime "picture5_updated_at"
     t.string   "preferred_gender"
     t.string   "gender"
+    t.datetime "updated_availability"
+    t.boolean  "today_before_five"
+    t.boolean  "today_after_five"
+    t.boolean  "tomorrow_before_five"
+    t.boolean  "tomorrow_after_five"
+    t.float    "percent_messaged"
+    t.integer  "timezone"
   end
 
 end

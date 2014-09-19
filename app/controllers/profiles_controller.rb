@@ -75,7 +75,7 @@ class ProfilesController < ApplicationController
 		@profile = Profile.find_by_facebook_id(params[:id])
 		@matches_made = @profile.matches.where("match=?",true).count
 		@matches_messaged = @profile.messages.pluck(:recipient_id).uniq.count
-		if @matches.messaged == 0 && @matches_made == 0
+		if @matches_messaged == 0 && @matches_made == 0
 			@profile.percent_messaged = 1
 		else
 			@profile.percent_messaged = @matches_messaged.to_f / @matches_made
