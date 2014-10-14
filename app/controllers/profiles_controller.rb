@@ -107,7 +107,7 @@ class ProfilesController < ApplicationController
 	private
 
 	def profile_params
-	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :answer3, :answer4, :answer5, :preferred_min_age,:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender, :picture1, :picture2, :picture3, :picture4, :picture5,:client_identification_sequence,:push_type,:today_before_five,:today_after_five,:tomorrow_before_five,:tomorrow_after_five,:updated_availability,:percent_messaged,:timezone,:coffee,:drinks,:lunch,:dinner,:remember_availability)
+	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :answer3, :answer4, :answer5, :preferred_min_age,:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender, :picture1, :picture2, :picture3, :picture4, :picture5,:client_identification_sequence,:push_type,:today_before_five,:today_after_five,:tomorrow_before_five,:tomorrow_after_five,:updated_availability,:percent_messaged,:timezone,:coffee,:drinks,:lunch,:dinner,:remember_availability,:crop_w,:crop_x,:crop_h,:crop_y)
 	end
 
 	def picture1_url?
