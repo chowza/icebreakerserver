@@ -12,7 +12,7 @@ class Profile < ActiveRecord::Base
       # crop: "-crop '#{crop_w}x#{crop_h}+#{crop_x}+#{crop_y}'"
       crop: {processors: [:cropper]}
 	}, url: "pictures/:facebook_id/:style/1:dotextension",
-  path: ":rails_root/public/:url",
+  path: ":rails_root/public/:url"
   
   #convert -crop 40x30+10+10 <==this is WxH+OffsetX+OffsetY
 
