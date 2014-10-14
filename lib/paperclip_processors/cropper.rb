@@ -2,8 +2,8 @@ module Paperclip
   class Cropper < Thumbnail
     def initialize(file, options = {}, attachment = nil)
       super
-      @current_geometry.width = target.crop_width
-      @current_geometry.height = target.crop_height
+      @current_geometry.width = target.crop_w
+      @current_geometry.height = target.crop_h
     end
     def target 
       target = @attachment.instance
