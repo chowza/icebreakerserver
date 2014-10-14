@@ -10,7 +10,7 @@ module Paperclip
     end
     def transformation_command
       puts target
-      puts JSON.stringify(target)
+      puts target.facebook_id
       puts target.crop_w
       puts "what was it!???"
       crop_command = ["-crop","#{target.crop_w}x#{target.crop_h}+#{target.crop_x}+#{target.crop_y}"]
