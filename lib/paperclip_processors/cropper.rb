@@ -1,16 +1,19 @@
 module Paperclip
   class Cropper < Thumbnail
-    def initialize(file, options = {}, attachment = nil)
-      super
-      @current_geometry.width = target.crop_w
-      @current_geometry.height = target.crop_h
-    end
-    def target 
-      @attachment.instance
-    end
     def transformation_command
-      crop_command = ["-crop", "#{target.crop_w}x#{target.crop_h}+#{target.crop_x}+#{target.crop_y}"]
-      crop_command + super
+      if crop_command
+        crop_command + super.sub(/ -crop \S+/, '')
+      else
+        super
+      end
+    end
+    def crop_command
+      target = @attachment.instance
+      puts target
+      puts "just put target"
+      if target.cropping?
+        ["-crop", "#{(target.crop_w.to_i).round}x#{(target.crop_h.to_i).round}+#{(target.crop_x.to_i).round}+#{(target.crop_y.to_i).round}"]
+      end
     end
   end
 end

@@ -73,9 +73,6 @@ class Profile < ActiveRecord::Base
     after_update :reprocess_picture1, :if => :cropping?
     
     def cropping?
-      puts "testing123"
-      puts crop_x
-      puts "testing234"
       !crop_x.blank? && !crop_y.blank? && !crop_w.blank? && !crop_h.blank?
     end
 
