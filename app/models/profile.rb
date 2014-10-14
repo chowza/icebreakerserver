@@ -10,7 +10,9 @@ class Profile < ActiveRecord::Base
 		  thumb: 'x100',
     	medium: 'x300'
 	}, url: "pictures/:facebook_id/:style/1:dotextension",
-  path: ":rails_root/public/:url"
+  path: ":rails_root/public/:url",
+  processors: [:cropper]
+  #convert -crop 40x30+10+10 <==this is WxH+OffsetX+OffsetY
 
 	has_attached_file :picture2, styles: {
 		  thumb: 'x100',
@@ -65,5 +67,23 @@ class Profile < ActiveRecord::Base
   	def picture5_from_url(url)
 	      self.picture5 = URI.parse(url)
   	end
+
+    attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
+    after_update :reprocess_avatar, :if => :cropping?
+    
+    def cropping?
+      !crop_x.blank? && !crop_y.blank? && !crop_w.blank? && !crop_h.blank?
+    end
+    
+    def avatar_geometry(style = :original)
+      @geometry ||= {}
+      @geometry[style] ||= Paperclip::Geometry.from_file(avatar.path(style))
+    end
+    
+    private
+    
+    def reprocess_avatar
+      avatar.reprocess!
+    end
 
 end
