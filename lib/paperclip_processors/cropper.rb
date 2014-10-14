@@ -9,8 +9,7 @@ module Paperclip
       @attachment.instance
     end
     def transformation_command
-      crop_command = [
-      "-crop","#{target.crop_w}x#{target.crop_h}+#{target.crop_x}+#{target.crop_y}"]
+      crop_command = ["-crop","#{target.crop_w}x#{target.crop_h}+#{target.crop_x}+#{target.crop_y}"]
       crop_command + super
     end
   end
