@@ -69,7 +69,7 @@ class Profile < ActiveRecord::Base
 	      self.picture5 = URI.parse(url)
   	end
 
-    attr_accessor :crop_x, :crop_y, :crop_w, :crop_h, :picture1
+    attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
     # after_update :reprocess_picture1, :if => :cropping?
     
     # def cropping?
