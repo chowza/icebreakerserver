@@ -70,21 +70,21 @@ class Profile < ActiveRecord::Base
   	end
 
     attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
-    after_update :reprocess_picture1, :if => :cropping?
+    # after_update :reprocess_picture1, :if => :cropping?
     
-    def cropping?
-      !crop_x.blank? && !crop_y.blank? && !crop_w.blank? && !crop_h.blank?
-    end
+    # def cropping?
+    #   !crop_x.blank? && !crop_y.blank? && !crop_w.blank? && !crop_h.blank?
+    # end
 
     # def avatar_geometry(style = :original)
     #   @geometry ||= {}
     #   @geometry[style] ||= Paperclip::Geometry.from_file(picture1.path(style))
     # end
     
-    private
+    # private
     
-    def reprocess_picture1
-      picture1.reprocess!
-    end
+    # def reprocess_picture1
+    #   picture1.reprocess!
+    # end
 
 end
