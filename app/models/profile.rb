@@ -9,6 +9,7 @@ class Profile < ActiveRecord::Base
 	has_attached_file :picture1, styles: {
 		  thumb: 'x100',
     	medium: 'x300'
+      # crop: '-crop #{crop_w}x#{crop_h}+#{crop_x}+#{crop_y}'
 	}, url: "pictures/:facebook_id/:style/1:dotextension",
   path: ":rails_root/public/:url",
   processors: [:cropper]
@@ -69,23 +70,21 @@ class Profile < ActiveRecord::Base
   	end
 
     attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
-    after_update :reprocess_avatar, :if => :cropping?
+    after_update :reprocess_picture1, :if => :cropping?
     
     def cropping?
-      puts "testinggggggggggggggggggggggggggggggggggg"
-      puts crop_x
       !crop_x.blank? && !crop_y.blank? && !crop_w.blank? && !crop_h.blank?
     end
-    
-    def avatar_geometry(style = :original)
-      @geometry ||= {}
-      @geometry[style] ||= Paperclip::Geometry.from_file(avatar.path(style))
-    end
+
+    # def avatar_geometry(style = :original)
+    #   @geometry ||= {}
+    #   @geometry[style] ||= Paperclip::Geometry.from_file(picture1.path(style))
+    # end
     
     private
     
-    def reprocess_avatar
-      avatar.reprocess!
+    def reprocess_picture1
+      picture1.reprocess!
     end
 
 end
