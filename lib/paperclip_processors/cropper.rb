@@ -12,8 +12,8 @@ module Paperclip
     def crop_command
       target = @attachment.instance
       puts "testingggggggggggggggg"
+      puts "testing workeddddddddddddddddd" + String.try_convert(target.crop_w)
       if target.cropping?
-        puts "testing workeddddddddddddddddd" + target.crop_w
          ["-crop", "#{target.crop_w}x#{target.crop_h}+#{target.crop_x}+#{target.crop_y}"]
       end
     end
