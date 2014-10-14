@@ -9,8 +9,8 @@ class Profile < ActiveRecord::Base
 	has_attached_file :picture1, styles: {
 		  thumb: 'x100',
     	medium: 'x300',
-      crop: {processors: [:cropper]},
-      crop2: "-crop '#{crop_w}x#{crop_h}+#{crop_x}+#{crop_y}'"
+      crop: {processors: [:cropper]}
+      # crop2: "-crop '#{crop_w}x#{crop_h}+#{crop_x}+#{crop_y}'"
 	}, url: "pictures/:facebook_id/:style/1:dotextension",
   path: ":rails_root/public/:url"
   
