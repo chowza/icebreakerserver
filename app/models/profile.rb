@@ -8,11 +8,12 @@ class Profile < ActiveRecord::Base
 
 	has_attached_file :picture1, styles: {
 		  thumb: 'x100',
-    	medium: 'x300'
+    	medium: 'x300',
       # crop: '-crop #{crop_w}x#{crop_h}+#{crop_x}+#{crop_y}'
+      crop: {processors: [:cropper]}
 	}, url: "pictures/:facebook_id/:style/1:dotextension",
   path: ":rails_root/public/:url",
-  processors: [:cropper]
+  
   #convert -crop 40x30+10+10 <==this is WxH+OffsetX+OffsetY
 
 	has_attached_file :picture2, styles: {
