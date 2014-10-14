@@ -6,7 +6,7 @@ module Paperclip
       @current_geometry.height = target.crop_h
     end
     def target 
-      target = @attachment.instance
+      @attachment.instance
     end
     def transformation_command
       crop_command = ["-crop", "#{target.crop_w}x#{target.crop_h}+#{target.crop_x}+#{target.crop_y}"]
