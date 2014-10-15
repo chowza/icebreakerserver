@@ -12,7 +12,6 @@ module Paperclip
       @options
     end
     def transformation_command
-      puts target.inspect
       puts optio.inspect
       puts "whatdaaa!???"
       # crop_command = ["-crop","#{target.crop_w}x#{target.crop_h}+#{target.crop_x}+#{target.crop_y}"]
