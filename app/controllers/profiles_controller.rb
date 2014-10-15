@@ -78,11 +78,7 @@ class ProfilesController < ApplicationController
 		end
 
 		if picture1_url?
-			@profile.picture1_from_url(params[:profile][:picture1_url])
-			@profile.crop_w = params[:profile][:crop_w]
-			@profile.crop_x = params[:profile][:crop_x]
-			@profile.crop_h = params[:profile][:crop_h]
-			@profile.crop_y = params[:profile][:crop_y]
+			@profile.picture1_from_url(params[:profile][:picture1_url],params[:profile][:crop_w])
 		end
 		if picture2_url?
 			@profile.picture2_from_url(params[:profile][:picture2_url])
