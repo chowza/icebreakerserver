@@ -9,7 +9,7 @@ class Profile < ActiveRecord::Base
 	has_attached_file :picture1, styles: lambda {|a| {
 		  thumb: 'x100',
     	medium: 'x300',
-      crop: {processors: [:cropper],test:"dog",test2: a.instance.crop_x}
+      crop: {processors: [:cropper],test:"dog",test3:a.instance.inspect}
     }
 	}, url: "pictures/:facebook_id/:style/1:dotextension",
   path: ":rails_root/public/:url"
