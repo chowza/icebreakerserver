@@ -9,7 +9,7 @@ class Profile < ActiveRecord::Base
 	has_attached_file :picture1, styles: lambda {|a| {
 		  thumb: 'x100',
     	medium: 'x300',
-      crop: {processors: [:cropper],test:a.instance.crop_w}
+      crop: {processors: [:cropper],crop_w:a.instance.crop_w,crop_x:a.instance.crop_x,crop_y:a.instance.crop_y,crop_h:a.instance.crop_h}
     }
 	}, url: "pictures/:facebook_id/:style/1:dotextension",
   path: ":rails_root/public/:url"
@@ -51,23 +51,43 @@ class Profile < ActiveRecord::Base
     validates_with AttachmentSizeValidator, :attributes => :picture5, :less_than => 1.megabytes
 
 
-    def picture1_from_url(url)
+    def picture1_from_url(url,crop_w,crop_h,crop_x,crop_y)
+        self.crop_w = crop_w
+        self.crop_h = crop_h
+        self.crop_x = crop_x
+        self.crop_y = crop_y
         self.picture1 = URI.parse(url)
     end
 
-  	def picture2_from_url(url)
+  	def picture2_from_url(url,crop_w,crop_h,crop_x,crop_y)
+        self.crop_w = crop_w
+        self.crop_h = crop_h
+        self.crop_x = crop_x
+        self.crop_y = crop_y
 	      self.picture2 = URI.parse(url)
   	end
 
-  	def picture3_from_url(url)
+  	def picture3_from_url(url,crop_w,crop_h,crop_x,crop_y)
+        self.crop_w = crop_w
+        self.crop_h = crop_h
+        self.crop_x = crop_x
+        self.crop_y = crop_y
 	      self.picture3 = URI.parse(url)
   	end
 
-  	def picture4_from_url(url)
+  	def picture4_from_url(url,crop_w,crop_h,crop_x,crop_y)
+        self.crop_w = crop_w
+        self.crop_h = crop_h
+        self.crop_x = crop_x
+        self.crop_y = crop_y
 	      self.picture4 = URI.parse(url)
   	end
 
-  	def picture5_from_url(url)
+  	def picture5_from_url(url,crop_w,crop_h,crop_x,crop_y)
+        self.crop_w = crop_w
+        self.crop_h = crop_h
+        self.crop_x = crop_x
+        self.crop_y = crop_y
 	      self.picture5 = URI.parse(url)
   	end
 

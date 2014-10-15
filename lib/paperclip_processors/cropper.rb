@@ -2,20 +2,17 @@ module Paperclip
   class Cropper < Thumbnail
     def initialize(file, options = {}, attachment = nil)
       super
-      @current_geometry.width = target.crop_w
-      @current_geometry.height = target.crop_h
+      @current_geometry.width = options.crop_w
+      @current_geometry.height = options.crop_h
     end
     def target
       @attachment.instance
     end
-    def optio
+    def options
       @options
     end
     def transformation_command
-      puts optio.inspect
-      puts "whatdaaa!???"
-      # crop_command = ["-crop","#{target.crop_w}x#{target.crop_h}+#{target.crop_x}+#{target.crop_y}"]
-      crop_command = ["-crop","100x100+0+0"]
+      crop_command = ["-crop","#{options.crop_w}x#{options.crop_h}+#{options.crop_x}+#{options.crop_y}","-resize","305x338"]
       crop_command + super
     end
   end
