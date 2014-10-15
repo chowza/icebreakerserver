@@ -6,21 +6,22 @@ class Profile < ActiveRecord::Base
 	has_many :matches
 	has_many :messages
 
-	has_attached_file :picture1, styles: {
+	has_attached_file :picture1, styles: lambda {|a| {
 		  thumb: 'x100',
     	medium: 'x300',
-      crop: {processors: [:cropper],test:"dog"}
+      crop: {processors: [:cropper],test:"dog",test2: a.instance.crop_x}
+    }
 	}, url: "pictures/:facebook_id/:style/1:dotextension",
   path: ":rails_root/public/:url"
   
   #convert -crop 40x30+10+10 <==this is WxH+OffsetX+OffsetY
 
-	has_attached_file :picture2, styles: lambda {|a|{
+	has_attached_file :picture2, styles: {
 		  thumb: 'x100',
-    	medium: 'x300',
-      crop: {processors:[:cropper],test:a.instance.crop_x}
-	}}, url: "pictures/:facebook_id/:style/2:dotextension",
+    	medium: 'x300'
+	}, url: "pictures/:facebook_id/:style/2:dotextension",
   path: ":rails_root/public/:url"
+
 	has_attached_file :picture3, styles: {
 		  thumb: 'x100',
     	medium: 'x300'

@@ -18,7 +18,7 @@ module Paperclip
       puts target.inspect
       puts optio.inspect
       puts fil.inspect
-      puts "what what what!???"
+      puts "whatdaaa!???"
       # crop_command = ["-crop","#{target.crop_w}x#{target.crop_h}+#{target.crop_x}+#{target.crop_y}"]
       crop_command = ["-crop","100x100+0+0"]
       crop_command + super
