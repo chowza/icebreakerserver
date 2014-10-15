@@ -12,7 +12,7 @@ module Paperclip
       @options
     end
     def transformation_command
-      crop_command = ["-crop","#{options.crop_w}x#{options.crop_h}+#{options.crop_x}+#{options.crop_y}","-resize","305x338"]
+      crop_command = ["-crop","#{options.crop_w}x#{options.crop_h}+#{options.crop_x}+#{options.crop_y}","-resize","338x305"]
       crop_command + super
     end
   end
