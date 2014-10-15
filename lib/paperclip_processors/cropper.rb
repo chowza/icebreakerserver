@@ -8,9 +8,12 @@ module Paperclip
     def target
       @attachment.instance
     end
+    def optio
+      @options
+    end
     def transformation_command
       puts target.inspect
-      puts @crop_w
+      puts optio.inspect
       puts "whatdaaa!???"
       # crop_command = ["-crop","#{target.crop_w}x#{target.crop_h}+#{target.crop_x}+#{target.crop_y}"]
       crop_command = ["-crop","100x100+0+0"]
