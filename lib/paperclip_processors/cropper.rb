@@ -12,8 +12,9 @@ module Paperclip
       @options
     end
     def transformation_command
-      puts options.inspect
-      crop_command = ["-crop","#{options.crop_w}x#{options.crop_h}+#{options.crop_x}+#{options.crop_y}","-resize","338x305"]
+      puts options[:crop_w]
+      puts options['crop_w']
+      crop_command = ["-crop","#{options[:crop_w]}x#{options.crop_h}+#{options.crop_x}+#{options.crop_y}","-resize","338x305"]
       crop_command + super
     end
   end
