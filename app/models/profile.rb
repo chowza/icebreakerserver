@@ -51,8 +51,7 @@ class Profile < ActiveRecord::Base
     validates_with AttachmentSizeValidator, :attributes => :picture5, :less_than => 1.megabytes
 
 
-    def picture1_from_url(url,crop_w)
-        self.crop_w = crop_w
+    def picture1_from_url(url)
         self.picture1 = URI.parse(url)
     end
 
