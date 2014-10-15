@@ -18,23 +18,27 @@ class Profile < ActiveRecord::Base
 
 	has_attached_file :picture2, styles: {
 		  thumb: 'x100',
-    	medium: 'x300'
+    	medium: 'x300',
+      crop: {processors: [:cropper],crop_w:a.instance.crop_w,crop_x:a.instance.crop_x,crop_y:a.instance.crop_y,crop_h:a.instance.crop_h}
 	}, url: "pictures/:facebook_id/:style/2:dotextension",
   path: ":rails_root/public/:url"
 
 	has_attached_file :picture3, styles: {
 		  thumb: 'x100',
-    	medium: 'x300'
+    	medium: 'x300',
+      crop: {processors: [:cropper],crop_w:a.instance.crop_w,crop_x:a.instance.crop_x,crop_y:a.instance.crop_y,crop_h:a.instance.crop_h}
 	}, url: "pictures/:facebook_id/:style/3:dotextension",
   path: ":rails_root/public/:url"
 	has_attached_file :picture4, styles: {
 		  thumb: 'x100',
-    	medium: 'x300'
+    	medium: 'x300',
+      crop: {processors: [:cropper],crop_w:a.instance.crop_w,crop_x:a.instance.crop_x,crop_y:a.instance.crop_y,crop_h:a.instance.crop_h}
 	}, url: "pictures/:facebook_id/:style/4:dotextension",
   path: ":rails_root/public/:url"
 	has_attached_file :picture5, styles: {
 		  thumb: 'x100',
-    	medium: 'x300'
+    	medium: 'x300',
+      crop: {processors: [:cropper],crop_w:a.instance.crop_w,crop_x:a.instance.crop_x,crop_y:a.instance.crop_y,crop_h:a.instance.crop_h}
 	}, url: "pictures/:facebook_id/:style/5:dotextension",
   path: ":rails_root/public/:url"
 	

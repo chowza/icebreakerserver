@@ -42,6 +42,7 @@ class ProfilesController < ApplicationController
 
 		#POST path to profiles - used to create a new user (TODO write some code to prevent someone creating two profiles on a double click)
 		@profile = Profile.new(profile_params)
+		# below code is unnecessary, TODO: remove below code and add it to front end side
 		@profile.picture1 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/iconlight.jpg')
 		@profile.picture2 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
 		@profile.picture3 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
@@ -77,22 +78,46 @@ class ProfilesController < ApplicationController
 			@profile.percent_messaged = @matches_messaged.to_f / @matches_made
 		end
 
+		# if picture1_url?
+		# 	@profile.picture1_from_url(params[:profile][:picture1_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
+		# end
+		# if picture2_url?
+		# 	@profile.picture2_from_url(params[:profile][:picture2_url],0,0,0,0)
+		# end
+		# if picture3_url?
+		# 	@profile.picture3_from_url(params[:profile][:picture3_url],0,0,0,0)
+		# end
+		# if picture4_url?
+		# 	@profile.picture4_from_url(params[:profile][:picture4_url],0,0,0,0)
+		# end
+		# if picture5_url?
+		# 	@profile.picture5_from_url(params[:profile][:picture5_url],0,0,0,0)
+		# end
+
+		if @profile.update(profile_params)
+			render json: @profile
+		else
+			render 'failed to update'
+		end
+	end
+
+	def crop
+		@profile = Profile.find_by_facebook_id(params[:id])
 		if picture1_url?
 			@profile.picture1_from_url(params[:profile][:picture1_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
 		end
 		if picture2_url?
-			@profile.picture2_from_url(params[:profile][:picture2_url],0,0,0,0)
+			@profile.picture2_from_url(params[:profile][:picture1_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
 		end
 		if picture3_url?
-			@profile.picture3_from_url(params[:profile][:picture3_url],0,0,0,0)
+			@profile.picture3_from_url(params[:profile][:picture1_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
 		end
 		if picture4_url?
-			@profile.picture4_from_url(params[:profile][:picture4_url],0,0,0,0)
+			@profile.picture4_from_url(params[:profile][:picture1_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
 		end
 		if picture5_url?
-			@profile.picture5_from_url(params[:profile][:picture5_url],0,0,0,0)
+			@profile.picture5_from_url(params[:profile][:picture1_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
 		end
-
 		if @profile.update(profile_params)
 			render json: @profile
 		else
