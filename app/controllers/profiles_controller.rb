@@ -107,16 +107,16 @@ class ProfilesController < ApplicationController
 			@profile.picture1_from_url(params[:profile][:picture1_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
 		end
 		if picture2_url?
-			@profile.picture2_from_url(params[:profile][:picture1_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
+			@profile.picture2_from_url(params[:profile][:picture2_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
 		end
 		if picture3_url?
-			@profile.picture3_from_url(params[:profile][:picture1_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
+			@profile.picture3_from_url(params[:profile][:picture3_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
 		end
 		if picture4_url?
-			@profile.picture4_from_url(params[:profile][:picture1_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
+			@profile.picture4_from_url(params[:profile][:picture4_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
 		end
 		if picture5_url?
-			@profile.picture5_from_url(params[:profile][:picture1_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
+			@profile.picture5_from_url(params[:profile][:picture5_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
 		end
 		if @profile.update(profile_params)
 			render json: @profile
