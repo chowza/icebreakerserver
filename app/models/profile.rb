@@ -8,37 +8,41 @@ class Profile < ActiveRecord::Base
 
 	has_attached_file :picture1, styles: lambda {|a| {
 		  thumb: 'x100',
-    	medium: 'x300',
-      crop: {processors: [:cropper],crop_w:a.instance.crop_w,crop_x:a.instance.crop_x,crop_y:a.instance.crop_y,crop_h:a.instance.crop_h}
+    	# medium: 'x300',
+      medium: {processors: [:cropper],crop_w:a.instance.crop_w,crop_x:a.instance.crop_x,crop_y:a.instance.crop_y,crop_h:a.instance.crop_h}
     }
 	}, url: "pictures/:facebook_id/:style/1:dotextension",
   path: ":rails_root/public/:url"
   
   #convert -crop 40x30+10+10 <==this is WxH+OffsetX+OffsetY
 
-	has_attached_file :picture2, styles: {
+	has_attached_file :picture2, styles: lambda {|a| {
 		  thumb: 'x100',
-    	medium: 'x300',
-      crop: {processors: [:cropper],crop_w:a.instance.crop_w,crop_x:a.instance.crop_x,crop_y:a.instance.crop_y,crop_h:a.instance.crop_h}
+    	# medium: 'x300',
+      medium: {processors: [:cropper],crop_w:a.instance.crop_w,crop_x:a.instance.crop_x,crop_y:a.instance.crop_y,crop_h:a.instance.crop_h}
+    }
 	}, url: "pictures/:facebook_id/:style/2:dotextension",
   path: ":rails_root/public/:url"
 
-	has_attached_file :picture3, styles: {
+	has_attached_file :picture3, styles: lambda {|a| {
 		  thumb: 'x100',
-    	medium: 'x300',
-      crop: {processors: [:cropper],crop_w:a.instance.crop_w,crop_x:a.instance.crop_x,crop_y:a.instance.crop_y,crop_h:a.instance.crop_h}
+    	# medium: 'x300',
+      medium: {processors: [:cropper],crop_w:a.instance.crop_w,crop_x:a.instance.crop_x,crop_y:a.instance.crop_y,crop_h:a.instance.crop_h}
+    }
 	}, url: "pictures/:facebook_id/:style/3:dotextension",
   path: ":rails_root/public/:url"
-	has_attached_file :picture4, styles: {
+	has_attached_file :picture4, styles: lambda {|a| {
 		  thumb: 'x100',
-    	medium: 'x300',
-      crop: {processors: [:cropper],crop_w:a.instance.crop_w,crop_x:a.instance.crop_x,crop_y:a.instance.crop_y,crop_h:a.instance.crop_h}
+    	# medium: 'x300',
+      medium: {processors: [:cropper],crop_w:a.instance.crop_w,crop_x:a.instance.crop_x,crop_y:a.instance.crop_y,crop_h:a.instance.crop_h}
+    }
 	}, url: "pictures/:facebook_id/:style/4:dotextension",
   path: ":rails_root/public/:url"
-	has_attached_file :picture5, styles: {
+	has_attached_file :picture5, styles: lambda {|a| {
 		  thumb: 'x100',
-    	medium: 'x300',
-      crop: {processors: [:cropper],crop_w:a.instance.crop_w,crop_x:a.instance.crop_x,crop_y:a.instance.crop_y,crop_h:a.instance.crop_h}
+    	# medium: 'x300',
+      medium: {processors: [:cropper],crop_w:a.instance.crop_w,crop_x:a.instance.crop_x,crop_y:a.instance.crop_y,crop_h:a.instance.crop_h}
+    }
 	}, url: "pictures/:facebook_id/:style/5:dotextension",
   path: ":rails_root/public/:url"
 	
