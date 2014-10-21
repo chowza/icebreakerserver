@@ -23,15 +23,15 @@ class ProfilesController < ApplicationController
 
 		if @already_swiped.empty?
 			if @matching_availability.empty?
-				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) AND ((coffee = ? AND coffee IS NOT FALSE) OR (lunch = ? AND lunch IS NOT FALSE) OR (dinner = ? AND dinner IS NOT FALSE) OR (drinks = ? AND drinks IS NOT FALSE)) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@user.percent_messaged,@user.percent_messaged,@user.coffee,@user.lunch,@user.dinner,@user.drinks]
+				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@user.percent_messaged,@user.percent_messaged]
 			else
-				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id in (?) AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) AND ((coffee = ? AND coffee IS NOT FALSE) OR (lunch = ? AND lunch IS NOT FALSE) OR (dinner = ? AND dinner IS NOT FALSE) OR (drinks = ? AND drinks IS NOT FALSE)) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@matching_availability,@user.percent_messaged,@user.percent_messaged,@user.coffee,@user.lunch,@user.dinner,@user.drinks]
+				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id in (?) AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@matching_availability,@user.percent_messaged,@user.percent_messaged]
 			end
 		else
 			if @matching_availability.empty?
-				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id NOT IN (?) AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) AND ((coffee = ? AND coffee IS NOT FALSE) OR (lunch = ? AND lunch IS NOT FALSE) OR (dinner = ? AND dinner IS NOT FALSE) OR (drinks = ? AND drinks IS NOT FALSE)) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@already_swiped,@user.percent_messaged,@user.percent_messaged,@user.coffee,@user.lunch,@user.dinner,@user.drinks]
+				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id NOT IN (?) AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@already_swiped,@user.percent_messaged,@user.percent_messaged]
 			else
-				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id NOT IN (?) AND p.id IN (?) AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) AND ((coffee = ? AND coffee IS NOT FALSE) OR (lunch = ? AND lunch IS NOT FALSE) OR (dinner = ? AND dinner IS NOT FALSE) OR (drinks = ? AND drinks IS NOT FALSE)) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@already_swiped,@matching_availability,@user.percent_messaged,@user.percent_messaged,@user.coffee,@user.lunch,@user.dinner,@user.drinks]
+				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id NOT IN (?) AND p.id IN (?) AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@already_swiped,@matching_availability,@user.percent_messaged,@user.percent_messaged]
 			end
 		end			
 
@@ -42,7 +42,7 @@ class ProfilesController < ApplicationController
 
 		#POST path to profiles - used to create a new user (TODO write some code to prevent someone creating two profiles on a double click)
 		@profile = Profile.new(profile_params)
-		# below code is unnecessary, TODO: remove below code and add it to front end side
+		# below code is unnecessary, TODO: remove below code and add images to front end side
 		@profile.picture1 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/iconlight.jpg')
 		@profile.picture2 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
 		@profile.picture3 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
@@ -125,6 +125,11 @@ class ProfilesController < ApplicationController
 		end
 	end
 
+	def individual
+		@profile = Profile.find(params[:id])
+		render json: @profile
+	end
+
 	def destroy
 		#DELETE path to profiles/:id - used to delete user
 	end
@@ -132,7 +137,7 @@ class ProfilesController < ApplicationController
 	private
 
 	def profile_params
-	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :answer3, :answer4, :answer5, :preferred_min_age,:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender, :picture1, :picture2, :picture3, :picture4, :picture5,:client_identification_sequence,:push_type,:today_before_five,:today_after_five,:tomorrow_before_five,:tomorrow_after_five,:updated_availability,:percent_messaged,:timezone,:coffee,:drinks,:lunch,:dinner,:remember_availability,:crop_w,:crop_x,:crop_h,:crop_y)
+	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :answer3, :answer4, :answer5, :preferred_min_age,:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender, :picture1, :picture2, :picture3, :picture4, :picture5,:client_identification_sequence,:push_type,:today_before_five,:today_after_five,:tomorrow_before_five,:tomorrow_after_five,:updated_availability,:percent_messaged,:timezone,:remember_availability,:crop_w,:crop_x,:crop_h,:crop_y)
 	end
 
 	def picture1_url?
