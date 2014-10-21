@@ -42,12 +42,13 @@ class ProfilesController < ApplicationController
 
 		#POST path to profiles - used to create a new user (TODO write some code to prevent someone creating two profiles on a double click)
 		@profile = Profile.new(profile_params)
-		# below code is unnecessary, TODO: remove below code and add images to front end side
-		@profile.picture1 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/iconlight.jpg')
-		@profile.picture2 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
-		@profile.picture3 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
-		@profile.picture4 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
-		@profile.picture5 = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
+
+		# below code is unnecessary, TODO: remove below code and add it to front end side
+		# @profile.picture1_from_url= URI.parse('https://s3.amazonaws.com/ibstaging/app/public/iconlight.jpg')
+		# @profile.picture2_from_url = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
+		# @profile.picture3_from_url = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
+		# @profile.picture4_from_url = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
+		# @profile.picture5_from_url = ('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
 		
 		if @profile.save
 			render json: @profile
