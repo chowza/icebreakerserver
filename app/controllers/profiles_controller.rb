@@ -71,6 +71,11 @@ class ProfilesController < ApplicationController
 		#PUT/PATCH path to profiles/:id - used to update details of user
 
 		@profile = Profile.find_by_facebook_id(params[:id])
+
+
+		# percent messaged can also be updated with a rake task every day...this would make this section faster.
+
+		#update percent messaged
 		@matches_made = @profile.matches.where("match=?",true).count
 		@matches_messaged = @profile.messages.pluck(:recipient_id).uniq.count
 		if @matches_messaged == 0 && @matches_made == 0
@@ -138,7 +143,7 @@ class ProfilesController < ApplicationController
 	private
 
 	def profile_params
-	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :answer3, :answer4, :answer5, :preferred_min_age,:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender, :picture1, :picture2, :picture3, :picture4, :picture5,:client_identification_sequence,:push_type,:percent_messaged,:crop_w,:crop_x,:crop_h,:crop_y) #:timezone,:remember_availability, :today_before_five,:today_after_five,:tomorrow_before_five,:tomorrow_after_five,:updated_availability,
+	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :answer3, :answer4, :answer5, :preferred_min_age,:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender, :picture1, :picture2, :picture3, :picture4, :picture5,:client_identification_sequence,:push_type,:percent_messaged,:crop_w,:crop_x,:crop_h,:crop_y,:looks_last_5_average_rating,:answer1_last_5_average_rating,:answer2_last_5_average_rating,:answer3_last_5_average_rating,:answer4_last_5_average_rating,:answer5_last_5_average_rating) #:timezone,:remember_availability, :today_before_five,:today_after_five,:tomorrow_before_five,:tomorrow_after_five,:updated_availability,
 	end
 
 	def picture1_url?
