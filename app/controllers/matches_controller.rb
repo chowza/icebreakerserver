@@ -93,7 +93,7 @@ class MatchesController < ApplicationController
     if @match.update(match_params)
 
       #get last 5 matches for the swipee and average those ratings
-      @swipees_matches = Profile.find(params[:id][:swipee_id]).matches.where("match = ? and answer1_rating NOT NULL LIMIT 5 SORT BY created_at DESC",true)
+      @swipees_matches = Profile.find(params[:match][:swipee_id]).matches.where("match = ? and answer1_rating NOT NULL LIMIT 5 SORT BY created_at DESC",true)
       @swipee_matches[0].profile.looks_last_5_average_rating = @swipee_matches.pluck(:looks_rating).sum/@swipee_matches.count
       @swipee_matches[0].profile.answer1_last_5_average_rating =  @swipee_matches.pluck(:answer1_rating).sum/@swipee_matches.count
       @swipee_matches[0].profile.answer2_last_5_average_rating =  @swipee_matches.pluck(:answer2_rating).sum/@swipee_matches.count
@@ -101,7 +101,7 @@ class MatchesController < ApplicationController
       @swipee_matches[0].profile.answer4_last_5_average_rating =  @swipee_matches.pluck(:answer4_rating).sum/@swipee_matches.count
       @swipee_matches[0].profile.answer5_last_5_average_rating =  @swipee_matches.pluck(:answer5_rating).sum/@swipee_matches.count
       if @swipee_matches[0].profile.save
-        render json: @match  
+        render json: {@match,swipee_matches[0].profile}
       else
         render "saved rating, failed to update user's last 5 average rating"
       end
