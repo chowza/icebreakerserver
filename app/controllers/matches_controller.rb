@@ -93,15 +93,17 @@ class MatchesController < ApplicationController
     if @match.update(match_params)
 
       #get last 5 matches for the swipee and average those ratings
-      @swipees_matches = Profile.find(params[:match][:swipee_id]).matches.where("match = ? and answer1_rating NOT NULL LIMIT 5 SORT BY created_at DESC",true)
-      @swipee_matches[0].profile.looks_last_5_average_rating = @swipee_matches.pluck(:looks_rating).sum/@swipee_matches.count
-      @swipee_matches[0].profile.answer1_last_5_average_rating =  @swipee_matches.pluck(:answer1_rating).sum/@swipee_matches.count
-      @swipee_matches[0].profile.answer2_last_5_average_rating =  @swipee_matches.pluck(:answer2_rating).sum/@swipee_matches.count
-      @swipee_matches[0].profile.answer3_last_5_average_rating =  @swipee_matches.pluck(:answer3_rating).sum/@swipee_matches.count
-      @swipee_matches[0].profile.answer4_last_5_average_rating =  @swipee_matches.pluck(:answer4_rating).sum/@swipee_matches.count
-      @swipee_matches[0].profile.answer5_last_5_average_rating =  @swipee_matches.pluck(:answer5_rating).sum/@swipee_matches.count
-      if @swipee_matches[0].profile.save
-        render json: {post_rating_match_details:@match,ratee_post_rating_profile:swipee_matches[0].profile}
+      @ratee_ratings = Match.where("swipee_id = ? AND answer1_rating IS NOT NULL",params[:match][:swipee_id]).limit(5).order(created_at: :desc)
+      
+      @ratee = Profile.find(params[:match][:swipee_id])
+      @ratee.looks_last_5_average_rating = @ratee_ratings.pluck(:looks_rating).sum/@ratee_ratings.count
+      @ratee.answer1_last_5_average_rating =  @ratee_ratings.pluck(:answer1_rating).sum/@ratee_ratings.count
+      @ratee.answer2_last_5_average_rating =  @ratee_ratings.pluck(:answer2_rating).sum/@ratee_ratings.count
+      @ratee.answer3_last_5_average_rating =  @ratee_ratings.pluck(:answer3_rating).sum/@ratee_ratings.count
+      @ratee.answer4_last_5_average_rating =  @ratee_ratings.pluck(:answer4_rating).sum/@ratee_ratings.count
+      @ratee.answer5_last_5_average_rating =  @ratee_ratings.pluck(:answer5_rating).sum/@ratee_ratings.count
+      if @ratee.save
+        render json: {post_rating_match_details:@match,ratee_post_rating_profile:@ratee}
       else
         render "saved rating, failed to update user's last 5 average rating"
       end
