@@ -89,18 +89,6 @@ class MatchesController < ApplicationController
   def update
     @match = Match.where("profile_id = ? and swipee_id = ?",params[:id],params[:match][:swipee_id])[0]
 
-    
-
-    @profile.find(params[:match][:swipee_id])
-
-
-    @profile.looks_last_5_average_rating = 
-    @profile.answer1_last_5_average_rating = 
-    @profile.answer2_last_5_average_rating =
-    @profile.answer3_last_5_average_rating =
-    @profile.answer4_last_5_average_rating =
-    @profile.answer5_last_5_average_rating =
-
     #update rating
     if @match.update(match_params)
 
