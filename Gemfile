@@ -22,6 +22,8 @@ gem 'httparty'
 
 gem 'gcm'
 
+gem 'nokogiri', '1.6.3'
+
 platforms :ruby do 
 # linux   
 	gem 'unicorn' 

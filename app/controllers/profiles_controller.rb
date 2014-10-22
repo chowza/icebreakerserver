@@ -14,25 +14,25 @@ class ProfilesController < ApplicationController
 			@already_swiped = (@already_swiped + JSON.parse(params[:skip_ids])).uniq
 		end
 
-		@matching_availability_updated_today = Profile.where("date_trunc('day',updated_availability + interval '? minutes')=date_trunc('day',localtimestamp + interval '? minutes') AND ((today_before_five = ? AND today_before_five IS NOT FALSE) OR (today_after_five = ? AND today_after_five IS NOT FALSE) OR (tomorrow_before_five = ? AND tomorrow_before_five IS NOT FALSE) OR (tomorrow_after_five = ? AND tomorrow_after_five IS NOT FALSE))",@user.timezone,@user.timezone,@user.today_before_five,@user.today_after_five,@user.tomorrow_before_five,@user.tomorrow_after_five).pluck(:id)
-		@matching_availability_updated_yesterday = Profile.where("date_trunc('day',updated_availability + interval '? minutes')=date_trunc('day',localtimestamp + interval '? minutes' - interval '1 day') AND ((tomorrow_before_five = ? AND tomorrow_before_five IS NOT FALSE) OR (tomorrow_after_five = ? AND tomorrow_after_five IS NOT FALSE))",@user.timezone,@user.timezone,@user.today_before_five,@user.today_after_five).pluck(:id)
-		@matching_availability_remembered = Profile.where("remember_availability IS TRUE AND ((today_before_five = ? AND today_before_five IS NOT FALSE) OR (today_after_five = ? AND today_after_five IS NOT FALSE) OR (tomorrow_before_five = ? AND tomorrow_before_five IS NOT FALSE) OR (tomorrow_after_five = ? AND tomorrow_after_five IS NOT FALSE))",@user.today_before_five,@user.today_after_five,@user.tomorrow_before_five,@user.tomorrow_after_five).pluck(:id)
+		# @matching_availability_updated_today = Profile.where("date_trunc('day',updated_availability + interval '? minutes')=date_trunc('day',localtimestamp + interval '? minutes') AND ((today_before_five = ? AND today_before_five IS NOT FALSE) OR (today_after_five = ? AND today_after_five IS NOT FALSE) OR (tomorrow_before_five = ? AND tomorrow_before_five IS NOT FALSE) OR (tomorrow_after_five = ? AND tomorrow_after_five IS NOT FALSE))",@user.timezone,@user.timezone,@user.today_before_five,@user.today_after_five,@user.tomorrow_before_five,@user.tomorrow_after_five).pluck(:id)
+		# @matching_availability_updated_yesterday = Profile.where("date_trunc('day',updated_availability + interval '? minutes')=date_trunc('day',localtimestamp + interval '? minutes' - interval '1 day') AND ((tomorrow_before_five = ? AND tomorrow_before_five IS NOT FALSE) OR (tomorrow_after_five = ? AND tomorrow_after_five IS NOT FALSE))",@user.timezone,@user.timezone,@user.today_before_five,@user.today_after_five).pluck(:id)
+		# @matching_availability_remembered = Profile.where("remember_availability IS TRUE AND ((today_before_five = ? AND today_before_five IS NOT FALSE) OR (today_after_five = ? AND today_after_five IS NOT FALSE) OR (tomorrow_before_five = ? AND tomorrow_before_five IS NOT FALSE) OR (tomorrow_after_five = ? AND tomorrow_after_five IS NOT FALSE))",@user.today_before_five,@user.today_after_five,@user.tomorrow_before_five,@user.tomorrow_after_five).pluck(:id)
 
-		@matching_availability = @matching_availability_updated_yesterday + @matching_availability_updated_today + @matching_availability_remembered
-		@matching_availability = @matching_availability.uniq
+		# @matching_availability = @matching_availability_updated_yesterday + @matching_availability_updated_today + @matching_availability_remembered
+		# @matching_availability = @matching_availability.uniq
 
 		if @already_swiped.empty?
-			if @matching_availability.empty?
+			# if @matching_availability.empty?
 				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@user.percent_messaged,@user.percent_messaged]
-			else
-				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id in (?) AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@matching_availability,@user.percent_messaged,@user.percent_messaged]
-			end
+			# else
+			# 	@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id in (?) AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@matching_availability,@user.percent_messaged,@user.percent_messaged]
+			# end
 		else
-			if @matching_availability.empty?
+			# if @matching_availability.empty?
 				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id NOT IN (?) AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@already_swiped,@user.percent_messaged,@user.percent_messaged]
-			else
-				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id NOT IN (?) AND p.id IN (?) AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@already_swiped,@matching_availability,@user.percent_messaged,@user.percent_messaged]
-			end
+			# else
+			# 	@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id NOT IN (?) AND p.id IN (?) AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@already_swiped,@matching_availability,@user.percent_messaged,@user.percent_messaged]
+			# end
 		end			
 
 		render json: @users_close_by
@@ -138,7 +138,7 @@ class ProfilesController < ApplicationController
 	private
 
 	def profile_params
-	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :answer3, :answer4, :answer5, :preferred_min_age,:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender, :picture1, :picture2, :picture3, :picture4, :picture5,:client_identification_sequence,:push_type,:today_before_five,:today_after_five,:tomorrow_before_five,:tomorrow_after_five,:updated_availability,:percent_messaged,:timezone,:remember_availability,:crop_w,:crop_x,:crop_h,:crop_y)
+	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :answer3, :answer4, :answer5, :preferred_min_age,:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender, :picture1, :picture2, :picture3, :picture4, :picture5,:client_identification_sequence,:push_type,:percent_messaged,:crop_w,:crop_x,:crop_h,:crop_y) #:timezone,:remember_availability, :today_before_five,:today_after_five,:tomorrow_before_five,:tomorrow_after_five,:updated_availability,
 	end
 
 	def picture1_url?
