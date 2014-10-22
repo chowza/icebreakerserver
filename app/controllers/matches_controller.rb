@@ -101,7 +101,7 @@ class MatchesController < ApplicationController
       @swipee_matches[0].profile.answer4_last_5_average_rating =  @swipee_matches.pluck(:answer4_rating).sum/@swipee_matches.count
       @swipee_matches[0].profile.answer5_last_5_average_rating =  @swipee_matches.pluck(:answer5_rating).sum/@swipee_matches.count
       if @swipee_matches[0].profile.save
-        render json: {@match,swipee_matches[0].profile}
+        render json: {post_rating_match_details:@match,ratee_post_rating_profile:swipee_matches[0].profile}
       else
         render "saved rating, failed to update user's last 5 average rating"
       end
