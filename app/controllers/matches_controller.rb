@@ -100,8 +100,6 @@ class MatchesController < ApplicationController
       @ratee.answer1_last_5_average_rating =  @ratee_ratings.pluck(:answer1_rating).sum/@ratee_ratings.count
       @ratee.answer2_last_5_average_rating =  @ratee_ratings.pluck(:answer2_rating).sum/@ratee_ratings.count
       @ratee.answer3_last_5_average_rating =  @ratee_ratings.pluck(:answer3_rating).sum/@ratee_ratings.count
-      @ratee.answer4_last_5_average_rating =  @ratee_ratings.pluck(:answer4_rating).sum/@ratee_ratings.count
-      @ratee.answer5_last_5_average_rating =  @ratee_ratings.pluck(:answer5_rating).sum/@ratee_ratings.count
       if @ratee.save
         render json: {post_rating_match_details:@match,ratee_post_rating_profile:@ratee}
       else
@@ -115,7 +113,7 @@ class MatchesController < ApplicationController
   private
 
   def match_params
-      params.require(:match).permit(:swipee_id, :likes, :match,:swipee_name,:profile_id,:recipient_facebook_id,:match_time,:looks_rating,:answer1_rating,:answer2_rating,:answer3_rating,:answer4_rating,:answer5_rating)
+      params.require(:match).permit(:swipee_id, :likes, :match,:swipee_name,:profile_id,:recipient_facebook_id,:match_time,:looks_rating,:answer1_rating,:answer2_rating,:answer3_rating)
   end
 
 end
