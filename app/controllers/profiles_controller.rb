@@ -44,11 +44,11 @@ class ProfilesController < ApplicationController
 		@profile = Profile.new(profile_params)
 
 		#this code needed to create default images
-		@profile.picture1_from_url= URI.parse('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/iconlight.jpg',0,0,1000,1000)
-		@profile.picture2_from_url = URI.parse('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',0,0,1000,1000)
-		@profile.picture3_from_url = URI.parse('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',0,0,1000,1000)
-		@profile.picture4_from_url = URI.parse('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',0,0,1000,1000)
-		@profile.picture5_from_url = URI.parse('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',0,0,1000,1000)
+		@profile.picture1_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/iconlight.jpg',0,0,1000,1000)
+		@profile.picture2_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',0,0,1000,1000)
+		@profile.picture3_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',0,0,1000,1000)
+		@profile.picture4_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',0,0,1000,1000)
+		@profile.picture5_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',0,0,1000,1000)
 
 		if @profile.save
 			render json: @profile
