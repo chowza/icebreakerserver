@@ -43,7 +43,8 @@ class ProfilesController < ApplicationController
 		#POST path to profiles - used to create a new user (TODO write some code to prevent someone creating two profiles on a double click)
 		@profile = Profile.new(profile_params)
 
-		#this code needed to create default images
+		# this code needed to create default images, but not absolutely crucial
+		# It is useful when someone disconnects while creating. This way others who see this user at least see some pictures and not an error. 
 		@profile.picture1_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/iconlight.jpg',0,0,1000,1000)
 		@profile.picture2_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',0,0,1000,1000)
 		@profile.picture3_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',0,0,1000,1000)
@@ -126,7 +127,7 @@ class ProfilesController < ApplicationController
 	private
 
 	def profile_params
-	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :feet, :inches, :blurb, :preferred_min_age,:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender, :picture1, :picture2, :picture3, :picture4, :picture5,:client_identification_sequence,:push_type,:percent_messaged,:crop_w,:crop_x,:crop_h,:crop_y,:looks_last_5_average_rating,:answer1_last_5_average_rating,:answer2_last_5_average_rating,:answer3_last_5_average_rating,order:[]) #:timezone,:remember_availability, :today_before_five,:today_after_five,:tomorrow_before_five,:tomorrow_after_five,:updated_availability,
+	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :feet, :inches, :blurb, :preferred_min_age,:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender, :picture1, :picture2, :picture3, :picture4, :picture5, :photos_uploaded,:client_identification_sequence,:push_type,:percent_messaged,:crop_w,:crop_x,:crop_h,:crop_y,:looks_last_5_average_rating,:answer1_last_5_average_rating,:answer2_last_5_average_rating,:answer3_last_5_average_rating,order:[]) #:timezone,:remember_availability, :today_before_five,:today_after_five,:tomorrow_before_five,:tomorrow_after_five,:updated_availability,
 	end
 
 	def picture1_url?
