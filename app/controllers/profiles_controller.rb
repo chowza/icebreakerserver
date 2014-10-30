@@ -43,13 +43,6 @@ class ProfilesController < ApplicationController
 		#POST path to profiles - used to create a new user (TODO write some code to prevent someone creating two profiles on a double click)
 		@profile = Profile.new(profile_params)
 
-		# below code is unnecessary, TODO: remove below code and add it to front end side
-		# @profile.picture1_from_url= URI.parse('https://s3.amazonaws.com/ibstaging/app/public/iconlight.jpg')
-		# @profile.picture2_from_url = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
-		# @profile.picture3_from_url = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
-		# @profile.picture4_from_url = URI.parse('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
-		# @profile.picture5_from_url = ('https://s3.amazonaws.com/ibstaging/app/public/icondark.jpg')
-		
 		if @profile.save
 			render json: @profile
 		else
@@ -83,22 +76,6 @@ class ProfilesController < ApplicationController
 		else
 			@profile.percent_messaged = @matches_messaged.to_f / @matches_made
 		end
-
-		# if picture1_url?
-		# 	@profile.picture1_from_url(params[:profile][:picture1_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
-		# end
-		# if picture2_url?
-		# 	@profile.picture2_from_url(params[:profile][:picture2_url],0,0,0,0)
-		# end
-		# if picture3_url?
-		# 	@profile.picture3_from_url(params[:profile][:picture3_url],0,0,0,0)
-		# end
-		# if picture4_url?
-		# 	@profile.picture4_from_url(params[:profile][:picture4_url],0,0,0,0)
-		# end
-		# if picture5_url?
-		# 	@profile.picture5_from_url(params[:profile][:picture5_url],0,0,0,0)
-		# end
 
 		if @profile.update(profile_params)
 			render json: @profile
@@ -143,7 +120,7 @@ class ProfilesController < ApplicationController
 	private
 
 	def profile_params
-	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :feet, :inches, :blurb, :preferred_min_age,:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender, :picture1, :picture2, :picture3, :picture4, :picture5,:client_identification_sequence,:push_type,:percent_messaged,:crop_w,:crop_x,:crop_h,:crop_y,:looks_last_5_average_rating,:answer1_last_5_average_rating,:answer2_last_5_average_rating,:answer3_last_5_average_rating) #:timezone,:remember_availability, :today_before_five,:today_after_five,:tomorrow_before_five,:tomorrow_after_five,:updated_availability,
+	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :feet, :inches, :blurb, :preferred_min_age,:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender,:order, :picture1, :picture2, :picture3, :picture4, :picture5,:client_identification_sequence,:push_type,:percent_messaged,:crop_w,:crop_x,:crop_h,:crop_y,:looks_last_5_average_rating,:answer1_last_5_average_rating,:answer2_last_5_average_rating,:answer3_last_5_average_rating) #:timezone,:remember_availability, :today_before_five,:today_after_five,:tomorrow_before_five,:tomorrow_after_five,:updated_availability,
 	end
 
 	def picture1_url?
