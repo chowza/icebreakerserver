@@ -43,6 +43,13 @@ class ProfilesController < ApplicationController
 		#POST path to profiles - used to create a new user (TODO write some code to prevent someone creating two profiles on a double click)
 		@profile = Profile.new(profile_params)
 
+		#this code needed to create default images
+		@profile.picture1_from_url= URI.parse('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/iconlight.jpg')
+		@profile.picture2_from_url = URI.parse('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg')
+		@profile.picture3_from_url = URI.parse('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg')
+		@profile.picture4_from_url = URI.parse('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg')
+		@profile.picture5_from_url = URI.parse('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg')
+
 		if @profile.save
 			render json: @profile
 		else
