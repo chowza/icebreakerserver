@@ -65,13 +65,6 @@ class ProfilesController < ApplicationController
 
 		@profile = Profile.find_by_facebook_id(params[:id])
 
-		# set order array to be blank if it does not exist
-		params[:profile][:order] ||= []
-
-		puts "-------------"
-		puts profile_params
-		puts "-------------"
-		
 		# percent messaged can also be updated with a rake task every day...this would make this section faster.
 
 		#update percent messaged
