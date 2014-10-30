@@ -44,11 +44,11 @@ class ProfilesController < ApplicationController
 		@profile = Profile.new(profile_params)
 
 		#this code needed to create default images
-		@profile.picture1_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/iconlight.jpg',1000,1000,0,0)
-		@profile.picture2_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',1000,1000,0,0)
-		@profile.picture3_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',1000,1000,0,0)
-		@profile.picture4_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',1000,1000,0,0)
-		@profile.picture5_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',1000,1000,0,0)
+		@profile.picture1_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/iconlight.jpg',0,0,1000,1000)
+		@profile.picture2_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',0,0,1000,1000)
+		@profile.picture3_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',0,0,1000,1000)
+		@profile.picture4_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',0,0,1000,1000)
+		@profile.picture5_from_url('https://s3.amazonaws.com/' + ENV['S3_BUCKET_NAME'] + '/app/public/icondark.jpg',0,0,1000,1000)
 
 		if @profile.save
 			render json: @profile
@@ -93,19 +93,19 @@ class ProfilesController < ApplicationController
 	def crop
 		@profile = Profile.find_by_facebook_id(params[:id])
 		if picture1_url?
-			@profile.picture1_from_url(params[:profile][:picture1_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
+			@profile.picture1_from_url(params[:profile][:picture1_url],params[:profile][:crop_x],params[:profile][:crop_y],params[:profile][:crop_w],params[:profile][:crop_h])
 		end
 		if picture2_url?
-			@profile.picture2_from_url(params[:profile][:picture2_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
+			@profile.picture2_from_url(params[:profile][:picture2_url],params[:profile][:crop_x],params[:profile][:crop_y],params[:profile][:crop_w],params[:profile][:crop_h])
 		end
 		if picture3_url?
-			@profile.picture3_from_url(params[:profile][:picture3_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
+			@profile.picture3_from_url(params[:profile][:picture3_url],params[:profile][:crop_x],params[:profile][:crop_y],params[:profile][:crop_w],params[:profile][:crop_h])
 		end
 		if picture4_url?
-			@profile.picture4_from_url(params[:profile][:picture4_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
+			@profile.picture4_from_url(params[:profile][:picture4_url],params[:profile][:crop_x],params[:profile][:crop_y],params[:profile][:crop_w],params[:profile][:crop_h])
 		end
 		if picture5_url?
-			@profile.picture5_from_url(params[:profile][:picture5_url],params[:profile][:crop_w],params[:profile][:crop_h],params[:profile][:crop_x],params[:profile][:crop_y])
+			@profile.picture5_from_url(params[:profile][:picture5_url],params[:profile][:crop_x],params[:profile][:crop_y],params[:profile][:crop_w],params[:profile][:crop_h])
 		end
 		if @profile.update(profile_params)
 			render json: @profile

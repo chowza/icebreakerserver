@@ -59,7 +59,7 @@ class Profile < ActiveRecord::Base
     validates_with AttachmentSizeValidator, :attributes => :picture5, :less_than => 1.megabytes
 
 
-    def picture1_from_url(url,crop_w,crop_h,crop_x,crop_y)
+    def picture1_from_url(url,crop_x,crop_y,crop_w,crop_h)
         self.crop_w = crop_w
         self.crop_h = crop_h
         self.crop_x = crop_x
@@ -67,7 +67,7 @@ class Profile < ActiveRecord::Base
         self.picture1 = URI.parse(url)
     end
 
-  	def picture2_from_url(url,crop_w,crop_h,crop_x,crop_y)
+  	def picture2_from_url(url,crop_x,crop_y,crop_w,crop_h)
         self.crop_w = crop_w
         self.crop_h = crop_h
         self.crop_x = crop_x
@@ -75,7 +75,7 @@ class Profile < ActiveRecord::Base
 	      self.picture2 = URI.parse(url)
   	end
 
-  	def picture3_from_url(url,crop_w,crop_h,crop_x,crop_y)
+  	def picture3_from_url(url,crop_x,crop_y,crop_w,crop_h)
         self.crop_w = crop_w
         self.crop_h = crop_h
         self.crop_x = crop_x
@@ -83,7 +83,7 @@ class Profile < ActiveRecord::Base
 	      self.picture3 = URI.parse(url)
   	end
 
-  	def picture4_from_url(url,crop_w,crop_h,crop_x,crop_y)
+  	def picture4_from_url(url,crop_x,crop_y,crop_w,crop_h)
         self.crop_w = crop_w
         self.crop_h = crop_h
         self.crop_x = crop_x
@@ -91,7 +91,7 @@ class Profile < ActiveRecord::Base
 	      self.picture4 = URI.parse(url)
   	end
 
-  	def picture5_from_url(url,crop_w,crop_h,crop_x,crop_y)
+  	def picture5_from_url(url,crop_x,crop_y,crop_w,crop_h)
         self.crop_w = crop_w
         self.crop_h = crop_h
         self.crop_x = crop_x
