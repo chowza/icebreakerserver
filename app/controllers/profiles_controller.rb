@@ -65,10 +65,10 @@ class ProfilesController < ApplicationController
 
 		@profile = Profile.find_by_facebook_id(params[:id])
 
-		puts "--------------------"
-		puts params[:profile][:order]
+		puts "----------------"
+		puts params[:profile]
 		puts profile_params
-		puts "--------------------"
+		puts "----------------"
 		# percent messaged can also be updated with a rake task every day...this would make this section faster.
 
 		#update percent messaged
