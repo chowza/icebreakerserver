@@ -5,9 +5,10 @@ class MessagesController < ApplicationController
 
 	def show
 		@profile = Profile.find_by_facebook_id(params[:id])
+		@other = Profile.find(params[:recipient_id])
 		@messages = Message.where("recipient_id = ? AND profile_id = ? OR recipient_id = ? AND profile_id = ?", @profile['id'],params[:recipient_id],params[:recipient_id],@profile['id']).order(:created_at)
 		@match_time = Match.where("profile_id = ? AND swipee_id = ?", @profile['id'],params[:recipient_id]).pluck(:match_time)[0]
-		render json: {messages:@messages,match_time: @match_time}
+		render json: {messages:@messages,match_time: @match_time, current_user: @profile.order[0], other_user: @other.order[0]}
 	end
 
 	def create
@@ -61,7 +62,7 @@ class MessagesController < ApplicationController
 	end
 
 	def message_params
-      params.require(:message).permit(:content, :profile_id, :recipient_id,:sender_facebook_id,:sender_name,:sender_picture1) 
+      params.require(:message).permit(:content, :profile_id, :recipient_id,:sender_facebook_id,:sender_name) 
   	end
 
 end
