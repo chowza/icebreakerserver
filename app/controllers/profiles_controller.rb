@@ -14,25 +14,10 @@ class ProfilesController < ApplicationController
 			@already_swiped = (@already_swiped + JSON.parse(params[:skip_ids])).uniq
 		end
 
-		# @matching_availability_updated_today = Profile.where("date_trunc('day',updated_availability + interval '? minutes')=date_trunc('day',localtimestamp + interval '? minutes') AND ((today_before_five = ? AND today_before_five IS NOT FALSE) OR (today_after_five = ? AND today_after_five IS NOT FALSE) OR (tomorrow_before_five = ? AND tomorrow_before_five IS NOT FALSE) OR (tomorrow_after_five = ? AND tomorrow_after_five IS NOT FALSE))",@user.timezone,@user.timezone,@user.today_before_five,@user.today_after_five,@user.tomorrow_before_five,@user.tomorrow_after_five).pluck(:id)
-		# @matching_availability_updated_yesterday = Profile.where("date_trunc('day',updated_availability + interval '? minutes')=date_trunc('day',localtimestamp + interval '? minutes' - interval '1 day') AND ((tomorrow_before_five = ? AND tomorrow_before_five IS NOT FALSE) OR (tomorrow_after_five = ? AND tomorrow_after_five IS NOT FALSE))",@user.timezone,@user.timezone,@user.today_before_five,@user.today_after_five).pluck(:id)
-		# @matching_availability_remembered = Profile.where("remember_availability IS TRUE AND ((today_before_five = ? AND today_before_five IS NOT FALSE) OR (today_after_five = ? AND today_after_five IS NOT FALSE) OR (tomorrow_before_five = ? AND tomorrow_before_five IS NOT FALSE) OR (tomorrow_after_five = ? AND tomorrow_after_five IS NOT FALSE))",@user.today_before_five,@user.today_after_five,@user.tomorrow_before_five,@user.tomorrow_after_five).pluck(:id)
-
-		# @matching_availability = @matching_availability_updated_yesterday + @matching_availability_updated_today + @matching_availability_remembered
-		# @matching_availability = @matching_availability.uniq
-
 		if @already_swiped.empty?
-			# if @matching_availability.empty?
-				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@user.percent_messaged,@user.percent_messaged]
-			# else
-			# 	@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id in (?) AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@matching_availability,@user.percent_messaged,@user.percent_messaged]
-			# end
+				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.height BETWEEN ? AND ? AND p.answer1 IN (?) AND p.answer2 IN (?) AND p.id != ? AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['preferred_min_height'],@user['preferred_max_height'],@user['preferred_intentions'],@user['preferred_body_type'],@user['id'],@user.percent_messaged,@user.percent_messaged]
 		else
-			# if @matching_availability.empty?
-				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id NOT IN (?) AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@already_swiped,@user.percent_messaged,@user.percent_messaged]
-			# else
-			# 	@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.id != ? AND p.id NOT IN (?) AND p.id IN (?) AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['id'],@already_swiped,@matching_availability,@user.percent_messaged,@user.percent_messaged]
-			# end
+				@users_close_by = Profile.find_by_sql ["SELECT * FROM profiles p WHERE earth_box(ll_to_earth(?,?),?) @> ll_to_earth(p.latitude,p.longitude) AND p.gender = ? AND p.age BETWEEN ? AND ? AND p.height BETWEEN ? AND ? AND p.answer1 IN (?) AND p.answer2 IN (?) AND p.id != ? AND p.id NOT IN (?) AND p.percent_messaged BETWEEN (?-0.1) AND (?+0.1) LIMIT 10",@user['latitude'],@user['longitude'],@user['preferred_distance'],@user['preferred_gender'],@user['preferred_min_age'],@user['preferred_max_age'],@user['preferred_min_height'],@user['preferred_max_height'],@user['preferred_intentions'],@user['preferred_body_type'],@user['id'],@already_swiped,@user.percent_messaged,@user.percent_messaged]
 		end			
 
 		render json: @users_close_by
@@ -119,7 +104,7 @@ class ProfilesController < ApplicationController
 	private
 
 	def profile_params
-	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :feet, :inches, :blurb, :preferred_min_age,:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender, :picture1, :picture2, :picture3, :picture4, :picture5, :photos_uploaded,:client_identification_sequence,:push_type,:percent_messaged,:crop_w,:crop_x,:crop_h,:crop_y,:looks_last_5_average_rating,:answer1_last_5_average_rating,:answer2_last_5_average_rating,:answer3_last_5_average_rating,order:[]) #:timezone,:remember_availability, :today_before_five,:today_after_five,:tomorrow_before_five,:tomorrow_after_five,:updated_availability,
+	    params.require(:profile).permit(:facebook_id, :age, :first_name, :latitude, :longitude, :answer1, :answer2, :feet, :inches,:height, :blurb,:preferred_min_feet,:preferred_min_inches,:preferred_min_height,:preferred_max_feet,:preferred_max_inches,:preferred_max_height, :preferred_min_age,:preferred_max_age, :preferred_gender, :preferred_sound, :preferred_distance, :gender, :picture1, :picture2, :picture3, :picture4, :picture5, :photos_uploaded,:client_identification_sequence,:push_type,:percent_messaged,:crop_w,:crop_x,:crop_h,:crop_y,:looks_last_5_average_rating,:answer1_last_5_average_rating,:answer2_last_5_average_rating,:answer3_last_5_average_rating,order:[],preferred_intentions:[],preferred_body_type:[])
 	end
 
 	def picture1_url?
