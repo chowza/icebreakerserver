@@ -43,7 +43,9 @@ class MessagesController < ApplicationController
 							title:"You have a new message from " + @message.profile.first_name+".", 
 							sender_name:@message.sender_name,
 							message_content:@message.content,
-							sender_facebook_id:@message.sender_facebook_id})
+							sender_facebook_id:@message.sender_facebook_id,
+							sender_picture1: @message.profile.order[0]
+							})
 				elsif @recipient.push_type == 'apns'
 					#TODO initialize Apple
 				elsif @recipient.push_type == 'mpns'
@@ -59,7 +61,7 @@ class MessagesController < ApplicationController
 	end
 
 	def message_params
-      params.require(:message).permit(:content, :profile_id, :recipient_id,:sender_facebook_id,:sender_name) 
+      params.require(:message).permit(:content, :profile_id, :recipient_id,:sender_facebook_id,:sender_name,:sender_picture1) 
   	end
 
 end
