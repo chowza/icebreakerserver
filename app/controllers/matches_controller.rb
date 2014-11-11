@@ -6,9 +6,8 @@ class MatchesController < ApplicationController
 
 	def show
 		#GET call to matches/:id - used to show an individual's matches
-    @matches = Profile.find(params[:id]).matches.where("match = ?",true)
-    @a = Match.where("match = true and profile_id = ?",params[:id]).joins("inner join profiles on profiles.id = matches.swipee_id").select("swipee_name,swipee_id,profiles.order as order")    
-		render json: @a
+    @matches = Match.where("match = true and profile_id = ?",params[:id]).joins("inner join profiles on profiles.id = matches.swipee_id").select("matches.swipee_name,matches.swipee_id,matches.recipient_facebook_id,profiles.order as order") 
+		render json: @matches
 	end
 
 	def create
@@ -39,7 +38,7 @@ class MatchesController < ApplicationController
 
             # notification to sender
             if @match.profile.push_type == 'gcm'
-              gcm.send([@match.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@recipient.profile.first_name+"!",title:"You have a new match",notId:"1",swipee_id:@recipient.profile_id,swipee_name:@recipient.profile.first_name,recipient_facebook_id:@recipient.profile.facebook_id})
+              gcm.send([@match.profile.client_identification_sequence],data:{message:"Chat-for-24 with "+@recipient.profile.first_name+"!",title:"You have a new match",notId:"1",swipee_id:@recipient.profile_id,swipee_name:@recipient.profile.first_name,recipient_facebook_id:@recipient.profile.facebook_id,order:@recipient.profile.order[0]})
             elsif @match.profile.push_type == 'apns'
               #TODO send apple device
             elsif @match.profile.push_type == 'mpns'
@@ -51,7 +50,7 @@ class MatchesController < ApplicationController
 
             #notification to recipient
             if @recipient.profile.push_type == 'gcm'
-              gcm.send([@recipient.profile.client_identification_sequence],data:{message:"Meet or Chat-for-24 with "+@match.profile.first_name+"!",title:"You have a new match",notId:"1",swipee_id:@match.profile_id,swipee_name:@match.profile.first_name,recipient_facebook_id:@match.profile.facebook_id})
+              gcm.send([@recipient.profile.client_identification_sequence],data:{message:"Chat-for-24 with "+@match.profile.first_name+"!",title:"You have a new match",notId:"1",swipee_id:@match.profile_id,swipee_name:@match.profile.first_name,recipient_facebook_id:@match.profile.facebook_id,order:@match.profile.order[0]})
             elsif @recipient.profile.push_type == 'apns'
               #TODO send apple device
             elsif @recipient.profile.push_type == 'mpns'
