@@ -6,9 +6,9 @@ class MatchesController < ApplicationController
 
 	def show
 		#GET call to matches/:id - used to show an individual's matches
-    @matches = Profile.find_by_facebook_id(params[:id]).matches.where("match = ?",true)
-    
-		render json: @matches
+    @matches = Profile.find(params[:id]).matches.where("match = ?",true)
+    @a = Match.where("match = true and profile_id = ?",params[:id]).joins("inner join profiles on profiles.id = matches.swipee_id").select("swipee_name,swipee_id,profiles.order as order")    
+		render json: @a
 	end
 
 	def create
