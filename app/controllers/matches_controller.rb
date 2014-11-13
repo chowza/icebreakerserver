@@ -86,24 +86,44 @@ class MatchesController < ApplicationController
 	end
 
   def update
-    @match = Match.where("profile_id = ? and swipee_id = ?",params[:id],params[:match][:swipee_id])[0]
+    @rator_rating = Match.where("profile_id = ? AND swipee_id = ?",params[:id],params[:match][:swipee_id])[0]
 
     #update rating
-    if @match.update(match_params)
+    if @rator_rating.update(match_params)
 
-      #get last 5 matches for the swipee and average those ratings
-      @ratee_ratings = Match.where("swipee_id = ? AND answer1_rating IS NOT NULL",params[:match][:swipee_id]).limit(5).order(created_at: :desc)
-      
-      @ratee = Profile.find(params[:match][:swipee_id])
-      @ratee.looks_last_5_average_rating = @ratee_ratings.pluck(:looks_rating).sum/@ratee_ratings.count
-      @ratee.answer1_last_5_average_rating =  @ratee_ratings.pluck(:answer1_rating).sum/@ratee_ratings.count
-      @ratee.answer2_last_5_average_rating =  @ratee_ratings.pluck(:answer2_rating).sum/@ratee_ratings.count
-      @ratee.answer3_last_5_average_rating =  @ratee_ratings.pluck(:answer3_rating).sum/@ratee_ratings.count
-      if @ratee.save
-        render json: {post_rating_match_details:@match,ratee_post_rating_profile:@ratee}
+      #check if the ratee has rated the rator yet, if so mark both ratings as valid
+      @ratee_rating = Match.where("swipee_id = ? AND profile_id = ? AND answer1_rating IS NOT NULL",params[:id],params[:match][:swipee_id])[0]
+      if @ratee_rating.nil?
+        #since the ratee has not yet rated the rator, we don't treat that rating as valid yet. simply render a json and end this server call
+        render json: @rator_rating
       else
-        render "saved rating, failed to update user's last 5 average rating"
-      end
+        #since the ratee has rated the rator, set the rating_valid flag to true, update the last 5 ratings for both users
+        @rator_rating.update({rating_valid:true})
+        @ratee_rating.update({rating_valid:true})
+
+        #get last 5 matches for the swipee and average those ratings
+        @ratee_ratings = Match.where("swipee_id = ? AND answer1_rating IS NOT NULL AND rating_valid IS TRUE",params[:match][:swipee_id]).limit(5).order(created_at: :desc)
+        
+        @ratee = Profile.find(params[:match][:swipee_id])
+        @ratee.looks_last_5_average_rating = @ratee_ratings.pluck(:looks_rating).sum/@ratee_ratings.count
+        @ratee.answer1_last_5_average_rating =  @ratee_ratings.pluck(:answer1_rating).sum/@ratee_ratings.count
+        @ratee.answer2_last_5_average_rating =  @ratee_ratings.pluck(:answer2_rating).sum/@ratee_ratings.count
+        @ratee.answer3_last_5_average_rating =  @ratee_ratings.pluck(:answer3_rating).sum/@ratee_ratings.count
+
+        #get last 5 matches for the swipor and average those ratings
+        @rator_ratings = Match.where("profile_id = ? AND answer1_rating IS NOT NULL AND rating_valid IS TRUE",params[:id]).limit(5).order(created_at: :desc)
+        @rator = Profile.find(params[:id])
+        @rator.looks_last_5_average_rating = @rator_ratings.pluck(:looks_rating).sum/@rator_ratings.count
+        @rator.answer1_last_5_average_rating =  @rator_ratings.pluck(:answer1_rating).sum/@rator_ratings.count
+        @rator.answer2_last_5_average_rating =  @rator_ratings.pluck(:answer2_rating).sum/@rator_ratings.count
+        @rator.answer3_last_5_average_rating =  @rator_ratings.pluck(:answer3_rating).sum/@rator_ratings.count
+
+        if @ratee.save && @rator.save
+          render json: {post_rating_match_details:@rator_rating,ratee_post_rating_profile:@ratee}
+        else
+          render "saved rating, failed to update user's last 5 average ratings"
+        end
+      end 
     else
       render 'failed to update'
     end
@@ -112,7 +132,7 @@ class MatchesController < ApplicationController
   private
 
   def match_params
-      params.require(:match).permit(:swipee_id, :likes, :match,:swipee_name,:profile_id,:recipient_facebook_id,:match_time,:looks_rating,:answer1_rating,:answer2_rating,:answer3_rating)
+      params.require(:match).permit(:swipee_id, :likes, :match,:swipee_name,:profile_id,:recipient_facebook_id,:match_time,:looks_rating,:answer1_rating,:answer2_rating,:answer3_rating,:rating_valid)
   end
 
 end
